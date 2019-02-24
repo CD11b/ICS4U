@@ -2,21 +2,18 @@ import pygame
 
 pygame.init()
 
-display_width = 1000
-display_height = 500
+display_width = 700
+display_height = 550
+
+gameDisplay = pygame.display.set_mode((display_width, display_height))
+pygame.display.set_caption('Limbo')
 
 black = (0, 0, 0)
 white = (255, 255, 255)
 green = (0, 255, 0)
 
-
-gameDisplay = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption('Limbo')
-
 clock = pygame.time.Clock()
-
-x_change = 0
-y_change = 0
+game_exit = False
 
 
 class PlayerImage:
@@ -28,47 +25,66 @@ class PlayerImage:
         self.image = pygame.image.load(image)
         self.image = pygame.transform.scale(self.image, (self.scale_x, self.scale_y))
 
+        self.width = self.image.get_width()
+        self.height = self.image.get_height()
+
+    def display(self):
         gameDisplay.blit(self.image, (self.x, self.y))
 
 
-player = PlayerImage(0, 0, 300, 300, 'prisoner.png')
+player = PlayerImage(5, 5, 150, 150, 'prisoner.png')
 
 
-crashed = False
+def crash():
+    global game_exit
 
-while not crashed:
+    game_exit = True
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            crashed = True
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                x_change = -5
-            elif event.key == pygame.K_RIGHT:
-                x_change = 5
-            elif event.key == pygame.K_UP:
-                y_change = -5
-            elif event.key == pygame.K_DOWN:
-                y_change = 5
+def game_loop():
 
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                x_change = 0
-            elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                y_change = 0
+    x_change = 0
+    y_change = 0
 
-        player.x += x_change
-        player.y += y_change
+    while not game_exit:
 
-        gameDisplay.fill(green)
-        gameDisplay.blit(player.image, (player.x, player.y))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                crash()
 
-        print(event)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    x_change = -5
+                elif event.key == pygame.K_RIGHT:
+                    x_change = 5
+                elif event.key == pygame.K_UP:
+                    y_change = -5
+                elif event.key == pygame.K_DOWN:
+                    y_change = 5
 
-    pygame.display.update()
-    clock.tick(60)
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    x_change = 0
+                elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                    y_change = 0
 
+            player.x += x_change
+            player.y += y_change
+
+            gameDisplay.fill(green)
+
+            player.display()
+
+            if player.x > display_width - player.scale_x or player.x < 0:
+                crash()
+            if player.y > display_height - player.scale_y or player.y < 0:
+                crash()
+
+        pygame.display.update()
+        clock.tick(60)
+
+
+game_loop()
 pygame.quit()
 quit()
 
