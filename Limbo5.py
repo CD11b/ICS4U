@@ -26,26 +26,27 @@ all_sprites.update()
 all_sprites.draw(screen)
 
 
-class SpriteSheet(pygame.sprite.Sprite):  # Loading sprite sheets
+class SpriteSheet(object):  # Loading sprite sheets
 
-    def __init__(self, file_name, width, height, range_count):
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self, file_name, width, height, range_count, frame, row):
         self.sprite_sheet = pygame.image.load(file_name).convert()
         self.cells = []
+        self.width, self.height = width, height
+        self.frame = frame
 
         for sprite in range(range_count):
-            self.width, self.height = (width, height)
-            rect = pygame.Rect(range_count * width, range_count * height, width, height)
+            rect = pygame.Rect(frame * width, row * height, width, height)
             image = pygame.Surface(rect.size).convert()
             image.blit(self.sprite_sheet, (0, 0), rect)
+            image.set_colorkey(BLACK)
             self.cells.append(image)
 
-        self.img = self.cells[0]
+        self.img = self.cells[self.frame]
         self.character_rect = self.img.get_rect()
         self.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
 
-guard = SpriteSheet('GregTest.png', 80, 72, 3)
+guard = SpriteSheet('GregTest.png', 80, 72, 3, 1, 0)
 
 game_exit = False
 
@@ -64,7 +65,7 @@ def game_loop():
             if event.type == pygame.QUIT:
                 crash()
 
-        screen.fill(GREEN)
+        screen.fill(WHITE)
 
         screen.blit(guard.img, (0, 0))
         pygame.display.update()
