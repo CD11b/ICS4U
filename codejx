@@ -1,3 +1,4 @@
+
 import pygame
 
 pygame.init()
@@ -7,13 +8,13 @@ white = (255, 255, 255)
 green = (0, 255, 0)
 
 screen_width = 1200
-screen_height = 600
+screen_height = 700
 
 win = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Limbo")
 
 
-bg = pygame.image.load('JailCell1.jpg')
+bg = pygame.image.load('JailCell.jpg')
 
 
 class Player:
@@ -29,11 +30,11 @@ class Player:
         self.down = False
         self.up = False
 
-        self.lookUp = [pygame.image.load(self.name + '0.jpg')]
-        self.lookDown = [pygame.image.load(self.name + '180.jpg')]
-        self.lookLeft = [pygame.image.load(self.name + '270.jpg')]
-        self.lookRight = [pygame.image.load(self.name + '90.jpg')]
-        self.lookIdle = [pygame.image.load(self.name + '0.jpg')]
+        self.lookUp = [pygame.image.load(self.name + '0.png')]
+        self.lookDown = [pygame.image.load(self.name + '180.png')]
+        self.lookLeft = [pygame.image.load(self.name + '270.png')]
+        self.lookRight = [pygame.image.load(self.name + '90.png')]
+        self.lookIdle = [pygame.image.load(self.name + '0.png')]
 
     def draw(self):
         if self.left:
@@ -52,7 +53,7 @@ class Player:
             win.blit(self.lookIdle[0], (self.x, self.y))
 
 
-guard = Player(50, 50, 40, 60, 'guard')
+prisoner = Player(50, 50, 40, 60, 'prisoner')
 
 clock = pygame.time.Clock()
 run = True
@@ -60,7 +61,7 @@ run = True
 
 def redrawGameWindow():
     win.blit(bg,(0,0))
-    guard.draw()
+    prisoner.draw()
     pygame.display.update()
 
 
@@ -72,33 +73,33 @@ while run:
 
     keys = pygame.key.get_pressed()
 
-    if keys[pygame.K_LEFT] and guard.x > 0 + 3:
-        guard.x -= guard.vel
-        guard.left = True
-        guard.right = False
-        guard.down = False
-        guard.up = False
+    if keys[pygame.K_LEFT] and prisoner.x > 0 + 3:
+        prisoner.x -= prisoner.vel
+        prisoner.left = True
+        prisoner.right = False
+        prisoner.down = False
+        prisoner.up = False
 
-    if keys[pygame.K_RIGHT] and guard.x < screen_width - guard.width:
-        guard.x += guard.vel
-        guard.left = False
-        guard.right = True
-        guard.down = False
-        guard.up = False
+    if keys[pygame.K_RIGHT] and prisoner.x < screen_width - prisoner.width:
+        prisoner.x += prisoner.vel
+        prisoner.left = False
+        prisoner.right = True
+        prisoner.down = False
+        prisoner.up = False
 
-    if keys[pygame.K_UP] and guard.y > 0:
-        guard.y -= guard.vel
-        guard.left = False
-        guard.right = False
-        guard.down = False
-        guard.up = True
+    if keys[pygame.K_UP] and prisoner.y > 0:
+        prisoner.y -= prisoner.vel
+        prisoner.left = False
+        prisoner.right = False
+        prisoner.down = False
+        prisoner.up = True
 
-    if keys[pygame.K_DOWN] and guard.y < 0 + 385:
-        guard.y += guard.vel
-        guard.left = False
-        guard.right = False
-        guard.down = True
-        guard.up = False
+    if keys[pygame.K_DOWN] and prisoner.y < 0 + 385:
+        prisoner.y += prisoner.vel
+        prisoner.left = False
+        prisoner.right = False
+        prisoner.down = True
+        prisoner.up = False
 
     redrawGameWindow()
     clock.tick(60)
