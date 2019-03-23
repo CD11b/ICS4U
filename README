@@ -1,6 +1,42 @@
 Learn object orientation: https://www.youtube.com/watch?v=ZDa-Z5JzLYM&list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc
-
-Install Pygame: https://www.youtube.com/watch?v=MdGoAnFP-mU or https://pythonprogramming.net/pygame-python-3-part-1-intro/
+Install Pygame: https://www.youtube.com/watch?v=MdGoAnFP-mU
 Pygame: https://www.youtube.com/watch?v=ujOTNg17LjI&list=PLQVvvaa0QuDdLkP8MrOXLe_rKuf6r80KO
+Sprite Sheets: http://programarcadegames.com/python_examples/en/sprite_sheets/
+Python Community Discord: https://discord.gg/python
+Pygame Community Discord: https://discord.gg/jMARaY
 
-http://programarcadegames.com/python_examples/en/sprite_sheets/
+How to type code into Discord chat: 
+```python
+
+[code]
+
+```
+
+
+Roles:
+
+Greg: 
+  Programming/Project Manager
+    Coding of user-game interactions (i.e. keys, mice)
+    Coding of player movement and projectiles (bullets)
+    Code optimization and troubleshooting
+    GitHub manager
+
+Jesse: 
+  Programming
+    Coding of mob/non-player characters (NPC) movement (Guard's pos follows player's pos. If player stops, guard stops following and begins
+                                                        gaining x/y in player's pos. If guard touches player, [look at Alan's role]),
+                                                        immediately kill player.)
+    Story development
+
+Alan: 
+  Programming
+    Damage and collisions (If a bullet's x/y pos = player/guard's x/y position, change health value, load image that corresponds to the
+                            player/guard's health value)
+  Graphics and music developer
+
+Abbodi: 
+  Programming
+    Screen and level transition (Make the background change if the player reaches a specific x/y positon, immediately change the player's
+                                 x/y position to the start of the second screen)
+  Graphics manager and developer
