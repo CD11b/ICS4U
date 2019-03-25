@@ -40,3 +40,13 @@ Abbodi:
     Screen and level transition (Make the background change if the player reaches a specific x/y positon, immediately change the player's
                                  x/y position to the start of the second screen)
   Graphics manager and developer
+  
+  
+  Git Bash Commands:
+  
+  git clone https://github.com/GregMpour/ICS4U.git
+  cd IS4U
+  git add .
+  git commit -m "Your message"
+  git push
+  
