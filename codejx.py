@@ -28,6 +28,10 @@ class Player:
         self.right = False
         self.down = False
         self.up = False
+        self.image = pygame.image.load('player0.jpg')
+
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.x, self.y)
 
         self.lookUp = [pygame.image.load(self.name + '0.jpg')]
         self.lookDown = [pygame.image.load(self.name + '180.jpg')]
@@ -67,6 +71,10 @@ class Guard:
         self.right = False
         self.down = False
         self.up = False
+        self.image = pygame.image.load('Guard0.jpg')
+
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.x, self.y)
 
         self.lookUp = [pygame.image.load(self.name + '0.jpg')]
         self.lookDown = [pygame.image.load(self.name + '180.jpg')]
@@ -90,53 +98,23 @@ class Guard:
         else:
             win.blit(self.lookIdle[0], (self.x, self.y))
 
+    def update(self):
+        global player
+        if self.x < player.x:
+            self.x += 1
+            self.rect.center = (self.x, self.y)
 
-def GuardLeft():
-    if keys[pygame.K_LEFT] and player.x > 0 + 3:
-        if not player.left and player.right and player.up and player.down:
-            Guard.x -= Guard.vel
-            Guard.left = True
-            Guard.right = False
-            Guard.down = False
-            Guard.up = False
-        else:
-            pass
+        elif self.x > player.x:
+            self.x -= 1
+            self.rect.center = (self.x, self.y)
 
+        if self.y < player.y:
+            self.y += 1
+            self.rect.center = (self.x, self.y)
 
-def GuardRight():
-    if keys[pygame.K_RIGHT] and player.x < screen_width - player.height - 25:
-        if not player.left and player.right and player.up and player.down:
-            Guard.x -= Guard.vel
-            Guard.left = False
-            Guard.right = True
-            Guard.down = False
-            Guard.up = False
-        else:
-            pass
-
-
-def GuardUp():
-    if keys[pygame.K_UP] and player.y > 0:
-        if not player.left and player.right and player.up and player.down:
-            Guard.y += Guard.vel
-            Guard.left = False
-            Guard.right = False
-            Guard.down = False
-            Guard.up = True
-        else:
-            pass
-
-
-def GuardDown():
-    if keys[pygame.K_DOWN] and player.y < 0 + 365:
-        if not player.left and player.right and player.up and player.down:
-            Guard.y -= Guard.vel
-            Guard.left = False
-            Guard.right = False
-            Guard.down = True
-            Guard.up = False
-        else:
-            pass
+        elif self.y > player.y:
+            self.y -= 1
+            self.rect.center = (self.x, self.y)
 
 
 Guard = Guard(200, 200, 40, 60, 'Guard')
@@ -167,12 +145,7 @@ while run:
         player.right = False
         player.down = False
         player.up = False
-        Guard.x -= Guard.vel
-        Guard.left = True
-        Guard.right = False
-        Guard.down = False
-        Guard.up = False
-        GuardLeft()
+        player.rect.center = (player.x, player.y)
 
     if keys[pygame.K_RIGHT] and player.x < screen_width - player.height - 25:
         player.x += player.vel
@@ -180,12 +153,7 @@ while run:
         player.right = True
         player.down = False
         player.up = False
-        Guard.x += Guard.vel
-        Guard.left = False
-        Guard.right = True
-        Guard.down = False
-        Guard.up = False
-        GuardRight()
+        player.rect.center = (player.x, player.y)
 
     if keys[pygame.K_UP] and player.y > 0:
         player.y -= player.vel
@@ -193,12 +161,7 @@ while run:
         player.right = False
         player.down = False
         player.up = True
-        Guard.y -= Guard.vel
-        Guard.left = False
-        Guard.right = False
-        Guard.down = False
-        Guard.up = True
-        GuardUp()
+        player.rect.center = (player.x, player.y)
 
     if keys[pygame.K_DOWN] and player.y < 0 + 365:
         player.y += player.vel
@@ -206,14 +169,10 @@ while run:
         player.right = False
         player.down = True
         player.up = False
-        Guard.y += Guard.vel
-        Guard.left = False
-        Guard.right = False
-        Guard.down = True
-        Guard.up = False
-        GuardDown()
+        player.rect.center = (player.x, player.y)
 
     redrawGameWindow()
+    Guard.update()
     clock.tick(60)
 
 pygame.quit()
