@@ -162,7 +162,6 @@ while run:
                             bullet_velocity()
                             break
 
-
     for bullet in bullets:
         if screen_width > bullet.x > 0:
 
