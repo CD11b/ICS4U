@@ -95,20 +95,6 @@ b = Bullet(guard.x, guard.y, 6, black, 0)
 bullets = []
 clicks = []
 
-
-def bullet_velocity():
-    for bullet in bullets:
-        speed = 5
-        bullet.mouse_position = pygame.mouse.get_pos()
-        bullet.mouse_player_dx = bullet.mouse_position[0] - guard.x
-        bullet.mouse_player_dy = bullet.mouse_position[1] - guard.y
-        bullet.angle = atan2(bullet.mouse_player_dy, bullet.mouse_player_dx)
-        bullet.new_velocity = (speed * cos(bullet.angle), speed * sin(bullet.angle))
-
-        n = len(bullets) - 1
-        bullets[n].velocity = bullet.new_velocity
-
-
 def redrawGameWindow():
     win.fill(green)
     guard.draw()
@@ -130,6 +116,19 @@ while run:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if len(bullets) < 6:
 
+                def bullet_velocity(change_x, change_y):
+                    for bullet in bullets:
+                        speed = 5
+                        bullet.mouse_position = pygame.mouse.get_pos()
+                        bullet.mouse_player_dx = bullet.mouse_position[0] - (guard.x + change_x)
+                        bullet.mouse_player_dy = bullet.mouse_position[1] - (guard.y + change_y)
+                        bullet.angle = atan2(bullet.mouse_player_dy, bullet.mouse_player_dx)
+                        bullet.new_velocity = (speed * cos(bullet.angle), speed * sin(bullet.angle))
+
+                        n = len(bullets) - 1
+                        bullets[n].velocity = bullet.new_velocity
+
+
                 mouse_positions = pygame.mouse.get_pos()
                 pos_none = (0, 0)
                 clicks.append(Click(pos_none))
@@ -141,25 +140,25 @@ while run:
                     if guard.left:
                         if clicks[s][0] <= guard.x:
                             bullets.append(Bullet(guard.x, guard.y + 82, 6, black, 0))
-                            bullet_velocity()
+                            bullet_velocity(0, 82)
                             break
 
                     if guard.right:
                         if clicks[s][0] >= guard.x:
                             bullets.append(Bullet(guard.x + 42, guard.y + 82, 6, black, 0))
-                            bullet_velocity()
+                            bullet_velocity(42, 82)
                             break
 
                     if guard.up:
                         if clicks[s][1] <= guard.y:
                             bullets.append(Bullet(guard.x, guard.y, 6, black, 0))
-                            bullet_velocity()
+                            bullet_velocity(0, 0)
                             break
 
                     if guard.down:
                         if clicks[s][1] >= guard.y:
                             bullets.append(Bullet(guard.x, guard.y + 42, 6, black, 0))
-                            bullet_velocity()
+                            bullet_velocity(0, 42)
                             break
 
     for bullet in bullets:
