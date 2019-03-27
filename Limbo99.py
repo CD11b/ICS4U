@@ -118,7 +118,7 @@ while run:
 
                 def bullet_velocity(change_x, change_y):
                     for bullet in bullets:
-                        speed = 5
+                        speed = 3
                         bullet.mouse_position = pygame.mouse.get_pos()
                         bullet.mouse_player_dx = bullet.mouse_position[0] - (guard.x + change_x)
                         bullet.mouse_player_dy = bullet.mouse_position[1] - (guard.y + change_y)
@@ -159,6 +159,12 @@ while run:
                         if clicks[s][1] >= guard.y:
                             bullets.append(Bullet(guard.x, guard.y + 42, 6, black, 0))
                             bullet_velocity(0, 42)
+                            break
+
+                    if guard.lookIdle:
+                        if clicks[s][1] <= guard.y:
+                            bullets.append(Bullet(guard.x, guard.y, 6, black, 0))
+                            bullet_velocity(0, 0)
                             break
 
     for bullet in bullets:
