@@ -35,6 +35,8 @@ class Player:
         self.lookRight = [pygame.image.load(self.name + '90.png')]
         self.lookIdle = [pygame.image.load(self.name + '0.png')]
 
+        self.hitbox = (self.x + 20, self.y, 100, 80)
+
     def draw(self):
         if self.left:
             win.blit(self.lookLeft[0], (self.x, self.y))
@@ -50,6 +52,10 @@ class Player:
 
         else:
             win.blit(self.lookIdle[0], (self.x, self.y))
+
+        self.hitbox = (self.x - 8, self.y, 90, 90)
+
+        #pygame.draw.rect(win, (255,0,0), self.hitbox,2)
 
 
 class Projectile:
@@ -70,7 +76,7 @@ class Bullet(Projectile):
         super().__init__(x, y, radius, color)
         self.velocity = velocity
 
-class GuardFull:
+class GuardGun:
     def __init__(self, x, y, width, height, name):
         self.name = name
         self.x = x
@@ -89,72 +95,95 @@ class GuardFull:
         self.lookRight = [pygame.image.load(self.name + '90.png')]
         self.lookIdle = [pygame.image.load(self.name + '180.png')]
 
+        self.hitbox = (self.x + 20, self.y, 100, 68)
+        self.health = 10
+        self.visible = True
+
+
     def draw(self):
-        if self.left:
-            win.blit(self.lookLeft[0], (self.x, self.y))
 
-        elif self.right:
-            win.blit(self.lookRight[0], (self.x, self.y))
+        if self.visible:
+            if self.left:
+                    win.blit(self.lookLeft[0], (self.x, self.y))
 
-        elif self.down:
-            win.blit(self.lookDown[0], (self.x, self.y))
+            elif self.right:
+                    win.blit(self.lookRight[0], (self.x, self.y))
 
-        elif self.up:
-            win.blit(self.lookUp[0], (self.x, self.y))
+            elif self.down:
+                    win.blit(self.lookDown[0], (self.x, self.y))
 
+            elif self.up:
+                    win.blit(self.lookUp[0], (self.x, self.y))
+
+            else:
+                    win.blit(self.lookIdle[0], (self.x, self.y))
+
+            self.hitbox = (self.x - 10, self.y, 90, 80)
+
+                #HEALTHBAR
+            pygame.draw.rect(win, (255,0,0), (self.hitbox[0], self.hitbox[1] - 20, 50, 10))
+            pygame.draw.rect(win, (0,128,0), (self.hitbox[0], self.hitbox[1] - 20, 50 - (5 * (10 -self.health)), 10))
+
+
+            #pygame.draw.rect(win, (255, 0, 0), self.hitbox, 2)
+
+    def hit(self):
+        if self.health > 0:
+            self.health -= 1
         else:
-            win.blit(self.lookIdle[0], (self.x, self.y))
+            self.visible = False
+        print('hit')
 
 
-def GuardFullLeft():
+def GuardGunLeft():
     if keys[pygame.K_LEFT] and prinser.x > 0 + 3:
         if not prinser.left and prinser.right and prinser.up and prinser.down:
-            GuardFull.x -= GuardFull.vel
-            GuardFull.left = True
-            GuardFull.right = False
-            GuardFull.down = False
-            GuardFull.up = False
+            GuardGun.x -= GuardGun.vel
+            GuardGun.left = True
+            GuardGun.right = False
+            GuardGun.down = False
+            GuardGun.up = False
         else:
             pass
 
 
-def GuardFullRight():
+def GuardGunRight():
     if keys[pygame.K_RIGHT] and prinser.x < screen_width - prinser.height - 25:
         if not prinser.left and prinser.right and prinser.up and prinser.down:
-            GuardFull.x -= Guard.vel
-            GuardFull.left = False
-            GuardFull.right = True
-            GuardFull.down = False
-            GuardFull.up = False
+            GuardGun.x -= Guard.vel
+            GuardGun.left = False
+            GuardGun.right = True
+            GuardGun.down = False
+            GuardGun.up = False
         else:
             pass
 
 
-def GuardFullUp():
+def GuardGunUp():
     if keys[pygame.K_UP] and prinser.y > 0:
         if not prinser.left and prinser.right and prinser.up and prinser.down:
-            GuardFull.y += GuardFull.vel
-            GuardFull.left = False
-            GuardFull.right = False
-            GuardFull.down = False
-            GuardFull.up = True
+            GuardGun.y += GuardGun.vel
+            GuardGun.left = False
+            GuardGun.right = False
+            GuardGun.down = False
+            GuardGun.up = True
         else:
             pass
 
 
-def GuardFullDown():
+def GuardGunDown():
     if keys[pygame.K_DOWN] and prinser.y < 0 + 365:
         if not prinser.left and prinser.right and prinser.up and prinser.down:
-            GuardFull.y -= GuardFull.vel
-            GuardFull.left = False
-            GuardFull.right = False
-            GuardFull.down = True
-            GuardFull.up = False
+            GuardGun.y -= GuardGun.vel
+            GuardGun.left = False
+            GuardGun.right = False
+            GuardGun.down = True
+            GuardGun.up = False
         else:
             pass
 
 
-GuardFull = GuardFull(200, 200, 40, 60, 'GuardFull')
+GuardGun = GuardGun(200, 200, 40, 60, 'GuardGun')
 
 
 
@@ -172,7 +201,7 @@ bullets = []
 def redrawGameWindow():
     win.blit(bg, (0, 0))
     prinser.draw()
-    GuardFull.draw()
+    GuardGun.draw()
     for bullet in bullets:
         bullet.draw()
     pygame.display.update()
@@ -194,7 +223,7 @@ while run:
 
                 for bullet in bullets:
 
-                    speed = 10
+                    speed = 25
                     bullet.mouse_position = pygame.mouse.get_pos()
                     bullet.mouse_player_dx = bullet.mouse_position[0] - prinser.x
                     bullet.mouse_player_dy = bullet.mouse_position[1] - prinser.y
@@ -206,6 +235,12 @@ while run:
 
 
     for bullet in bullets:
+
+        if bullet.y - bullet.radius < GuardGun.hitbox[1] + GuardGun.hitbox[3] and bullet.y + bullet.radius > GuardGun.hitbox[1]:
+            if bullet.x + bullet.radius > GuardGun.hitbox[0] and bullet.x - bullet.radius < GuardGun.hitbox[0] + GuardGun.hitbox[2]:
+                GuardGun.hit()
+                bullets.pop(bullets.index(bullet))
+
         if screen_width > bullet.x > 0:
 
             n = 0
@@ -221,7 +256,7 @@ while run:
                 bullets.pop(bullets.index(bullet))
 
         else:
-            bullets.pop(bullets.index(bullet))
+         bullets.pop(bullets.index(bullet))
 
 
 
@@ -231,12 +266,12 @@ while run:
         prinser.right = False
         prinser.down = False
         prinser.up = False
-        GuardFull.x -= GuardFull.vel
-        GuardFull.left = True
-        GuardFull.right = False
-        GuardFull.down = False
-        GuardFull.up = False
-        GuardFullLeft()
+        GuardGun.x -= GuardGun.vel
+        GuardGun.left = True
+        GuardGun.right = False
+        GuardGun.down = False
+        GuardGun.up = False
+        GuardGunLeft()
 
     if keys[pygame.K_RIGHT] and prinser.x + prinser.width < screen_width - prinser.width:
         prinser.x += prinser.speed
@@ -244,12 +279,12 @@ while run:
         prinser.right = True
         prinser.down = False
         prinser.up = False
-        GuardFull.x += GuardFull.vel
-        GuardFull.left = False
-        GuardFull.right = True
-        GuardFull.down = False
-        GuardFull.up = False
-        GuardFullRight()
+        GuardGun.x += GuardGun.vel
+        GuardGun.left = False
+        GuardGun.right = True
+        GuardGun.down = False
+        GuardGun.up = False
+        GuardGunRight()
 
 
     if keys[pygame.K_UP] and prinser.y > 0:
@@ -258,12 +293,12 @@ while run:
         prinser.right = False
         prinser.down = False
         prinser.up = True
-        GuardFull.y -= GuardFull.vel
-        GuardFull.left = False
-        GuardFull.right = False
-        GuardFull.down = False
-        GuardFull.up = True
-        GuardFullUp()
+        GuardGun.y -= GuardGun.vel
+        GuardGun.left = False
+        GuardGun.right = False
+        GuardGun.down = False
+        GuardGun.up = True
+        GuardGunUp()
 
 
 
@@ -273,12 +308,12 @@ while run:
         prinser.right = False
         prinser.down = True
         prinser.up = False
-        GuardFull.y += GuardFull.vel
-        GuardFull.left = False
-        GuardFull.right = False
-        GuardFull.down = True
-        GuardFull.up = False
-        GuardFullDown()
+        GuardGun.y += GuardGun.vel
+        GuardGun.left = False
+        GuardGun.right = False
+        GuardGun.down = True
+        GuardGun.up = False
+        GuardGunDown()
 
 
     redrawGameWindow()
