@@ -98,6 +98,7 @@ class GuardGun:
         self.hitbox = (self.x + 20, self.y, 100, 68)
         self.health = 10
         self.visible = True
+        self.visible = True
 
 
     def draw(self):
@@ -132,6 +133,7 @@ class GuardGun:
             self.health -= 1
         else:
             self.visible = False
+            #GuardGun.pop(GuardGun.index(GuardGun))
         print('hit')
 
 
