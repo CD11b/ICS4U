@@ -1,7 +1,5 @@
 import pygame
 from math import atan2, sin, cos
-import time
-
 
 pygame.init()
 
