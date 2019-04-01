@@ -1,6 +1,18 @@
 import pygame
+import time
 
 pygame.init()
+
+black = [0, 0, 0]
+white = [255, 255, 255]
+red = [255, 0, 0]
+green = [0, 255, 0]
+
+
+smallfont = pygame.font.SysFont("comicsansms", 25)
+medfont = pygame.font.SysFont("comicsansms", 50)
+largefont = pygame.font.SysFont("comicsansms", 80)
+
 
 screen_width = 1200
 screen_height = 600
@@ -10,11 +22,53 @@ pygame.display.set_caption("Limbo")
 
 
 bg = pygame.image.load('JailCell1.jpg')
+lvl1 = pygame.image.load('lvl1.jpg')
+
+font = pygame.font.SysFont(None, 100)
+
+
+def message_to_screen(msg, color):
+    screen_text = font.render(msg, True, color)
+    win.blit(screen_text, [screen_width/2, screen_height/2])
+
+
+def game_intro():
+    intro = True
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                    intro = False
+
+        win.fill(white)
+        message_to_screen("Welcome to Rerun",
+                          green,
+                          -100,
+                          "large")
+        message_to_screen("The objective of this game is to escape from the prison",
+                          black,
+                          -30)
+        message_to_screen("You need to fight your way through each level without getting caught or shot",
+                          black,
+                          10)
+        message_to_screen("If you get caught or shot, you lose",
+                          black,
+                          50)
+        message_to_screen("Press c to play or q to quit",
+                          black,
+                          180)
+        pygame.display.update()
+        clock.tick(15)
 
 
 # classifying player
-class Player:
+class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, name):
+        pygame.sprite.Sprite.__init__(self)
         self.name = name
         self.x = x
         self.y = y
@@ -57,8 +111,9 @@ player = Player(75, 255, 40, 60, 'player')
 
 
 # classifying Guards
-class Guard:
+class Guard(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, name):
+        pygame.sprite.Sprite.__init__(self)
         self.name = name
         self.x = x
         self.y = y
@@ -130,26 +185,58 @@ class Guard:
             self.up = True
             self.down = False
 
+        if self.x == player.x and self.y == player.y:
+            message_to_screen("You lost", red)
+            pygame.display.update()
+            time.sleep(2)
+            pygame.quit()
+
+        else:
+            pass
 
 Guard = Guard(1250, 255, 40, 60, 'Guard')
+
+
+# update positions
+def prelvlwindow():
+    win.blit(bg, (0, 0))
+    player.draw()
+    Guard.chase()
+    Guard.draw()
+    lvlup()
+    pygame.display.update()
+
+
+def lvl1window():
+    win.blit(lvl1, (0, 0))
+    player.draw()
+    lvlup()
+    pygame.display.update()
+
+
+def lvlup():
+    if player.x == 1100:
+        player.x = 75
+        player.y = 255
+        player.rect.center = (player.x, player.y)
+        player.left = False
+        player.right = True
+        player.down = False
+        player.up = False
+        lvl1window()
+
+    else:
+        pass
 
 
 # game loop
 clock = pygame.time.Clock()
 run = True
+playeralive = True
 
 
-# update positions
-def redrawGameWindow():
-    win.blit(bg, (0, 0))
-    player.draw()
-    Guard.chase()
-    Guard.draw()
-    pygame.display.update()
-
-
-# first level code
-def firstlevel():
+# prelevel code
+def prelevel():
     global run
     while run:
 
@@ -191,12 +278,12 @@ def firstlevel():
             player.up = False
             player.rect.center = (player.x, player.y)
 
-        redrawGameWindow()
+        prelvlwindow()
         clock.tick(60)
 
 
 # game starts here
-firstlevel()
+prelevel()
 
 
 pygame.quit()
