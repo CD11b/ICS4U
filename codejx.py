@@ -1,5 +1,6 @@
 import pygame
 import time
+from math import atan2, sin, cos
 
 pygame.init()
 
@@ -66,7 +67,7 @@ def game_intro():
 
 
 # classifying player
-class Player(pygame.sprite.Sprite):
+class Character(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, name):
         pygame.sprite.Sprite.__init__(self)
         self.name = name
@@ -107,49 +108,19 @@ class Player(pygame.sprite.Sprite):
             win.blit(self.lookIdle[0], (self.x, self.y))
 
 
-player = Player(75, 255, 40, 60, 'player')
+class Player(Character, pygame.sprite.Sprite):
+    def __init__(self, x, y, width, height, name, health):
+        super().__init__(x, y, width, height, name)
+        self.health = health
 
 
-# classifying Guards
-class Guard(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, name):
-        pygame.sprite.Sprite.__init__(self)
-        self.name = name
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.vel = 2
-        self.left = False
-        self.right = False
-        self.down = False
-        self.up = False
-        self.image = pygame.image.load('Guard0.jpg')
+player = Player(75, 255, 40, 60, 'player', 6)
 
-        self.rect = self.image.get_rect()
-        self.rect.center = (self.x, self.y)
 
-        self.lookUp = [pygame.image.load(self.name + '0.jpg')]
-        self.lookDown = [pygame.image.load(self.name + '180.jpg')]
-        self.lookLeft = [pygame.image.load(self.name + '270.jpg')]
-        self.lookRight = [pygame.image.load(self.name + '90.jpg')]
-        self.lookIdle = [pygame.image.load(self.name + '180.jpg')]
-
-    def draw(self):
-        if self.left:
-            win.blit(self.lookLeft[0], (self.x, self.y))
-
-        elif self.right:
-            win.blit(self.lookRight[0], (self.x, self.y))
-
-        elif self.down:
-            win.blit(self.lookDown[0], (self.x, self.y))
-
-        elif self.up:
-            win.blit(self.lookUp[0], (self.x, self.y))
-
-        else:
-            win.blit(self.lookIdle[0], (self.x, self.y))
+class Guard(Character, pygame.sprite.Sprite):
+    def __init__(self, x, y, width, height, name, health):
+        super().__init__(x, y, width, height, name)
+        self.health = health
 
     def chase(self):
         global player
@@ -194,7 +165,38 @@ class Guard(pygame.sprite.Sprite):
         else:
             pass
 
-Guard = Guard(1250, 255, 40, 60, 'Guard')
+
+Guard = Guard(1250, 255, 40, 60, 'Guard', 6)
+
+
+class Projectile:
+    def __init__(self, x, y, radius, color):
+        self.x = x
+        self.y = y
+        self.radius = radius
+        self.color = color
+
+    def draw(self):
+
+        pygame.draw.circle(win, self.color, (int(round(self.x, 0)), int(round(self.y, 0))), self.radius)
+
+
+class Bullet(Projectile):
+    def __init__(self, x, y, radius, color, velocity):
+        super().__init__(x, y, radius, color)
+        self.velocity = velocity
+        self.speed = .5
+
+
+class Click:
+    def __init__(self, mouse_pos):
+        self.mouse_pos = mouse_pos
+
+
+b = Bullet(Guard.x, Guard.y, 6, black, 0)
+bullets = []
+clicks = []
+shots = []
 
 
 # update positions
@@ -204,6 +206,8 @@ def prelvlwindow():
     Guard.chase()
     Guard.draw()
     lvlup()
+    for i in bullets:
+        i.draw()
     pygame.display.update()
 
 
@@ -239,14 +243,105 @@ playeralive = True
 def prelevel():
     global run
     while run:
+        global n
+
+        keys = pygame.key.get_pressed()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
 
-        keys = pygame.key.get_pressed()
+            if keys[pygame.K_r]:
+                del shots[:]
+                loaded = True
 
-        if keys[pygame.K_LEFT] and player.x > 0 + 3:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if len(bullets) <= 6:
+
+                    loaded = True
+                    if len(shots) == 6:
+                        loaded = False
+
+                    def bullet_velocity(change_x, change_y):
+                        for bullet in bullets:
+                            speed = 25
+                            bullet.mouse_position = pygame.mouse.get_pos()
+                            bullet.mouse_player_dx = bullet.mouse_position[0] - (player.x + change_x)
+                            bullet.mouse_player_dy = bullet.mouse_position[1] - (player.y + change_y)
+                            bullet.angle = atan2(bullet.mouse_player_dy, bullet.mouse_player_dx)
+                            bullet.new_velocity = (speed * cos(bullet.angle), speed * sin(bullet.angle))
+
+                            n = len(bullets) - 1
+                            bullets[n].velocity = bullet.new_velocity
+
+                    mouse_positions = pygame.mouse.get_pos()
+                    pos_none = (0, 0)
+                    clicks.append(Click(pos_none))
+
+                    if loaded:
+                        for click in clicks:
+                            s = len(clicks) - 1
+                            clicks[s] = mouse_positions
+
+                            if player.left:
+                                if clicks[s][0] <= player.x:
+                                    bullets.append(Bullet(player.x, player.y + 75, 4, black, 0))
+                                    bullet_velocity(0, 75)
+                                    shots.append([])
+                                    break
+                                break
+
+                            if player.right:
+                                if clicks[s][0] >= player.x + 42:
+                                    bullets.append(Bullet(player.x + 57, player.y + 7, 4, black, 0))
+                                    bullet_velocity(57, 7)
+                                    shots.append([])
+                                    break
+                                break
+
+                            if player.up:
+                                if clicks[s][1] <= player.y:
+                                    bullets.append(Bullet(player.x + 7, player.y, 4, black, 0))
+                                    bullet_velocity(7, 0)
+                                    shots.append([])
+                                    break
+                                break
+
+                            if player.down:
+                                if clicks[s][1] >= player.y + 42:
+                                    bullets.append(Bullet(player.x + 75, player.y + 57, 4, black, 0))
+                                    bullet_velocity(75, 57)
+                                    shots.append([])
+                                    break
+                                break
+
+                            if player.lookIdle:
+                                if clicks[s][1] <= player.y:
+                                    bullets.append(Bullet(player.x + 7, player.y, 4, black, 0))
+                                    bullet_velocity(7, 0)
+                                    shots.append([])
+                                    break
+                                break
+
+        for bullet in bullets:
+            if screen_width > bullet.x > 0:
+
+                n = 0
+                while n <= len(bullets) - 1:
+                    bullets[n].x += bullets[n].velocity[0]
+                    bullets[n].y += bullets[n].velocity[1]
+                    n += 1
+
+                if screen_width < bullet.x or bullet.x < 0:
+                    bullets.pop(bullets.index(bullet))
+
+                if screen_height < bullet.y or bullet.y < 0:
+                    bullets.pop(bullets.index(bullet))
+
+            else:
+                bullets.pop(bullets.index(bullet))
+
+        if keys[pygame.K_a] and player.x > 0 + 3:
             player.x -= player.vel
             player.left = True
             player.right = False
@@ -254,7 +349,7 @@ def prelevel():
             player.up = False
             player.rect.center = (player.x, player.y)
 
-        if keys[pygame.K_RIGHT] and player.x < screen_width - player.height - 25:
+        if keys[pygame.K_d] and player.x < screen_width - player.height - 25:
             player.x += player.vel
             player.left = False
             player.right = True
@@ -262,7 +357,7 @@ def prelevel():
             player.up = False
             player.rect.center = (player.x, player.y)
 
-        if keys[pygame.K_UP] and player.y > 150:
+        if keys[pygame.K_w] and player.y > 150:
             player.y -= player.vel
             player.left = False
             player.right = False
@@ -270,7 +365,7 @@ def prelevel():
             player.up = True
             player.rect.center = (player.x, player.y)
 
-        if keys[pygame.K_DOWN] and player.y < 0 + 365:
+        if keys[pygame.K_s] and player.y < 0 + 365:
             player.y += player.vel
             player.left = False
             player.right = False
@@ -287,3 +382,4 @@ prelevel()
 
 
 pygame.quit()
+
