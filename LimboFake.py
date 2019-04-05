@@ -6,6 +6,7 @@ pygame.init()
 black = (0, 0, 0)
 white = (255, 255, 255)
 green = (0, 255, 0)
+
 level_1 = pygame.image.load('Level_1.jpg')
 
 screen_width = 1200
@@ -98,7 +99,7 @@ clicks = []
 shots = []
 
 def redrawGameWindow():
-    win.blit(level_1, (0, 0))
+    win.fill(green)
     guard.draw()
     # player.draw()
     for i in bullets:
@@ -142,6 +143,7 @@ while run:
                 mouse_positions = pygame.mouse.get_pos()
                 pos_none = (0, 0)
                 clicks.append(Click(pos_none))
+                print(mouse_positions)
 
                 if loaded:
                     for click in clicks:
@@ -157,19 +159,23 @@ while run:
                             break
 
                         if guard.right:
-                            if clicks[s][0] >= guard.x + 42:
-                                bullets.append(Bullet(guard.x + 57, guard.y + 7, 4, black, 0))
-                                bullet_velocity(57, 7)
-                                shots.append([])
-                                break
+                            if clicks[s][0] >= guard.x + 200:
+                                if clicks[s][1] >= guard.y - 200:
+                                    if clicks[s][1] <= guard.y + 200:
+                                        bullets.append(Bullet(guard.x + 57, guard.y + 7, 4, black, 0))
+                                        bullet_velocity(57, 7)
+                                        shots.append([])
+                                        break
                             break
 
                         if guard.up:
-                            if clicks[s][1] <= guard.y:
-                                bullets.append(Bullet(guard.x + 7, guard.y, 4, black, 0))
-                                bullet_velocity(7, 0)
-                                shots.append([])
-                                break
+                            if clicks[s][1] <= guard.y - 100:
+                                if clicks[s][1] <= guard.x + 400:
+
+                                    bullets.append(Bullet(guard.x + 7, guard.y, 4, black, 0))
+                                    bullet_velocity(7, 0)
+                                    shots.append([])
+                                    break
                             break
 
                         if guard.down:
@@ -202,7 +208,11 @@ while run:
                 bullets.pop(bullets.index(bullet))
 
             if screen_height < bullet.y or bullet.y < 0:
-                bullets.pop(bullets.index(bullet))
+                try:
+                    bullets.pop(bullets.index(bullet))
+
+                except ValueError:
+                    pass
 
         else:
             bullets.pop(bullets.index(bullet))
