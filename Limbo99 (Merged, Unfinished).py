@@ -22,7 +22,6 @@ pygame.display.set_caption("Limbo")
 
 
 bg = pygame.image.load('JailCell1.png')
-lvl1 = pygame.image.load('lvl1.png')
 
 font = pygame.font.SysFont(None, 100)
 
@@ -153,9 +152,9 @@ class Bullet(Projectile):
         super().__init__(x, y)
 
         self.velocity = 0
-        self.radius = 2
+        self.radius = 3
         self.color = black
-        self.speed = 5
+        self.speed = 15
 
 
 class Click:
@@ -241,6 +240,7 @@ while run:
                 mouse_positions = pygame.mouse.get_pos()
                 pos_none = (0, 0)
                 clicks.append(Click(pos_none))
+                print(mouse_positions)
 
                 if loaded:
                     for click in clicks:
@@ -248,17 +248,21 @@ while run:
                         clicks[s] = mouse_positions
 
                         if player.left:
-                            if clicks[s][0] <= player.x:
-                                bullets.append(Bullet(player.x, player.y + 75))
-                                bullet_velocity(0, 75)
-                                shots.append([])
-                                break
+
+                            if clicks[s][0] <= (player.x + player.height/2 + player.width/2) - 200:
+                                if clicks[s][1] <= (player.y + player.height/2 + player.width/2) + 200:
+                                    if clicks[s][1] >= (player.y + player.height/2 + player.width/2) - 200:
+                                        bullets.append(Bullet(player.x, player.y + 75))
+                                        bullet_velocity(0, 75)
+                                        shots.append([])
+                                        break
                             break
 
                         if player.right:
-                            if clicks[s][0] >= player.x + 200:
-                                if clicks[s][1] >= player.y - 200:
-                                    if clicks[s][1] <= player.y + 200:
+
+                            if clicks[s][0] >= (player.x + player.height/2 + player.width/2) + 200:
+                                if clicks[s][1] >= (player.y + player.height/2 + player.width/2) - 200:
+                                    if clicks[s][1] <= (player.y + player.height/2 + player.width/2) + 200:
                                         bullets.append(Bullet(player.x + 57, player.y + 7))
                                         bullet_velocity(57, 7)
                                         shots.append([])
@@ -266,29 +270,36 @@ while run:
                             break
 
                         if player.up:
-                            if clicks[s][1] <= player.y - 100:
-                                if clicks[s][1] <= player.x + 400:
-                                    bullets.append(Bullet(player.x + 7, player.y))
-                                    bullet_velocity(7, 0)
-                                    shots.append([])
-                                    break
+                            if clicks[s][1] <= (player.y + player.height/2 + player.width/2) - 200:
+                                if clicks[s][0] >= (player.x + player.height/2 + player.width/2) - 200:
+                                    if clicks[s][0] <= (player.x + player.height/2 + player.width/2) + 200:
+                                        bullets.append(Bullet(player.x + 7, player.y))
+                                        bullet_velocity(7, 0)
+                                        shots.append([])
+                                        break
                             break
 
                         if player.down:
-                            if clicks[s][1] >= player.y + 42:
-                                bullets.append(Bullet(player.x + 75, player.y + 57))
-                                bullet_velocity(75, 57)
-                                shots.append([])
-                                break
+                            if clicks[s][1] >= player.y + 200:
+                                if clicks[s][0] >= (player.x + player.height/2 + player.width/2) - 200:
+                                    if clicks[s][0] <= (player.x + player.height/2 + player.width/2) + 200:
+                                        bullets.append(Bullet(player.x + 75, player.y + 57))
+                                        bullet_velocity(75, 57)
+                                        shots.append([])
+                                        break
                             break
 
-                        if player.lookIdle:
-                            if clicks[s][1] <= player.y:
-                                bullets.append(Bullet(player.x + 7, player.y))
-                                bullet_velocity(7, 0)
-                                shots.append([])
-                                break
-                            break
+                        if clicks[s][0] >= (player.x + player.height / 2 + player.width / 2) + 200:
+                            if clicks[s][1] >= (player.y + player.height / 2 + player.width / 2) - 200:
+                                if clicks[s][1] <= (player.y + player.height / 2 + player.width / 2) + 200:
+                                    bullets.append(Bullet(player.x + 57, player.y + 7))
+                                    bullet_velocity(57, 7)
+                                    shots.append([])
+                                    break
+                        break
+
+                    else:
+                        pass
 
     for bullet in bullets:
         if screen_width > bullet.x > 0:
