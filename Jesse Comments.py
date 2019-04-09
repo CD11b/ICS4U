@@ -10,11 +10,13 @@ red = [255, 0, 0]
 green = [0, 255, 0]
 
 
+# defining different fonts which will be used in a function that allows us to display text in our game
 smallfont = pygame.font.SysFont("comicsansms", 25)
 medfont = pygame.font.SysFont("comicsansms", 50)
 largefont = pygame.font.SysFont("comicsansms", 80)
 
 
+# size of the screen
 screen_width = 1200
 screen_height = 600
 
@@ -22,17 +24,20 @@ win = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Limbo")
 
 
+# background images
 bg = pygame.image.load('JailCell1.png')
 lvl1 = pygame.image.load('level_1.png')
 
 font = pygame.font.SysFont(None, 100)
 
 
+# this function is not yet completed
 def message_to_screen(msg, color):
     screen_text = font.render(msg, True, color)
     win.blit(screen_text, [screen_width/2, screen_height/2])
 
 
+# this function is not yet completed
 def game_intro():
     intro = True
     while intro:
@@ -66,7 +71,7 @@ def game_intro():
         clock.tick(15)
 
 
-# classifying player
+# classifying character
 class Character(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, name):
         pygame.sprite.Sprite.__init__(self)
@@ -108,6 +113,7 @@ class Character(pygame.sprite.Sprite):
             win.blit(self.lookIdle[0], (self.x, self.y))
 
 
+# classifying Player which inherits from the class Character
 class Player(Character, pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, name, health):
         super().__init__(x, y, width, height, name)
@@ -117,11 +123,13 @@ class Player(Character, pygame.sprite.Sprite):
 player = Player(75, 255, 40, 60, 'player', 6)
 
 
+# classifying Guard which inherits from the class Character
 class Guard(Character, pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, name, health):
         super().__init__(x, y, width, height, name)
         self.health = health
-
+       
+    # allows the AI to chase the player by comparing the player's x/y coordinates to the guard's
     def chase(self):
         global player
         if self.x < player.x:
@@ -169,6 +177,7 @@ class Guard(Character, pygame.sprite.Sprite):
 Guard = Guard(1250, 255, 40, 60, 'Guard', 6)
 
 
+# classifying Projectile
 class Projectile:
     def __init__(self, x, y, radius, color):
         self.x = x
@@ -181,6 +190,7 @@ class Projectile:
         pygame.draw.circle(win, self.color, (int(round(self.x, 0)), int(round(self.y, 0))), self.radius)
 
 
+# classifying Bullets which inherits from Projectile
 class Bullet(Projectile):
     def __init__(self, x, y, radius, color, velocity):
         super().__init__(x, y, radius, color)
@@ -188,6 +198,7 @@ class Bullet(Projectile):
         self.speed = .5
 
 
+# classifying Click that allows mouse movement
 class Click:
     def __init__(self, mouse_pos):
         self.mouse_pos = mouse_pos
@@ -199,7 +210,7 @@ clicks = []
 shots = []
 
 
-# update positions
+# update positions(it says pre-level here but it should be called level 1)
 def prelvlwindow():
     win.blit(bg, (0, 0))
     player.draw()
@@ -211,6 +222,7 @@ def prelvlwindow():
     pygame.display.update()
 
 
+# function for the second level(since pre-level is actually level 1, lvl1window should be lvl2window)
 def lvl1window():
     win.blit(lvl1, (0, 0))
     player.draw()
@@ -218,6 +230,7 @@ def lvl1window():
     pygame.display.update()
 
 
+# function for advancing to the next level(not completed yet)
 def lvlup():
     if player.x == 1100:
         player.x = 75
@@ -239,7 +252,7 @@ run = True
 playeralive = True
 
 
-# prelevel code
+#level 1 code
 def prelevel():
     global run
     while run:
@@ -340,8 +353,9 @@ def prelevel():
 
             else:
                 bullets.pop(bullets.index(bullet))
-
-        if keys[pygame.K_a] and player.x > 0 + 3:
+        
+        # code for player's movement
+        if keys[pygame.K_a] and player.x > 0 + 3:    # conditions for setting boundaries
             player.x -= player.vel
             player.left = True
             player.right = False
@@ -381,5 +395,6 @@ def prelevel():
 prelevel()
 
 
+# exits the game if certain requirements are met(for example, if the player gets caughter or closes the pygame window)
 pygame.quit()
 
