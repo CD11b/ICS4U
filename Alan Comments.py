@@ -55,7 +55,8 @@ class Player:
 
         self.hitbox = (self.x - 8, self.y, 90, 90)
 
-        #pygame.draw.rect(win, (255,0,0), self.hitbox,2)
+        #pygame.draw.rect(win, (255,0,0), self.hitbox,2) :this was to draw a hitbox around the character so I could edit the dimensions. 
+        
 
 
 class Projectile:
@@ -95,6 +96,8 @@ class GuardGun:
         self.lookRight = [pygame.image.load(self.name + '90.png')]
         self.lookIdle = [pygame.image.load(self.name + '180.png')]
 
+
+        #adding hitbox, and health to the guard 
         self.hitbox = (self.x + 20, self.y, 100, 68)
         self.health = 10
         self.visible = True
@@ -102,7 +105,7 @@ class GuardGun:
 
 
     def draw(self):
-
+        #only load the guard image if the guard it alive
         if self.visible:
             if self.left:
                     win.blit(self.lookLeft[0], (self.x, self.y))
@@ -121,7 +124,7 @@ class GuardGun:
 
             self.hitbox = (self.x - 10, self.y, 90, 80)
 
-                #HEALTHBAR
+            #HEALTHBAR
             pygame.draw.rect(win, (255,0,0), (self.hitbox[0], self.hitbox[1] - 20, 50, 10))
             pygame.draw.rect(win, (0,128,0), (self.hitbox[0], self.hitbox[1] - 20, 50 - (5 * (10 -self.health)), 10))
 
@@ -129,11 +132,12 @@ class GuardGun:
             #pygame.draw.rect(win, (255, 0, 0), self.hitbox, 2)
 
     def hit(self):
+        #defining how the guards health interacts with the image and healthbar level
         if self.health > 0:
             self.health -= 1
         else:
             self.visible = False
-            #GuardGun.pop(GuardGun.index(GuardGun))
+    
         print('hit')
 
 
