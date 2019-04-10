@@ -241,7 +241,8 @@ while run:
 
 
     for bullet in bullets:
-
+        
+        #making it so that bullet pop(disapear) once they hit the hitbox of the guard 
         if bullet.y - bullet.radius < GuardGun.hitbox[1] + GuardGun.hitbox[3] and bullet.y + bullet.radius > GuardGun.hitbox[1]:
             if bullet.x + bullet.radius > GuardGun.hitbox[0] and bullet.x - bullet.radius < GuardGun.hitbox[0] + GuardGun.hitbox[2]:
                 GuardGun.hit()
