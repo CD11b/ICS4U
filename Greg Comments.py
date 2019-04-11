@@ -66,14 +66,14 @@ class Character:
 
 class Mob(Character):  # Class that defines each mob/monster (e.g. guards)
     def __init__(self, x, y, width, height, name, health):
-        super().__init__(x, y, width, height, name)
+        super().__init__(x, y, width, height, name)  # Calling __innit__ from Character
         self.health = health  # Health of mob.  Used in the final version of the game, but not currently used in the
         # prototype.
 
 
 class Player(Character):  # Class that defines the player/prisoner
     def __init__(self, x, y, width, height, name, health):
-        super().__init__(x, y, width, height, name)
+        super().__init__(x, y, width, height, name)  # Calling __innit__ from Character
         self.health = health  # Health of player. Used in the final version of the game, but not currently used in the
         # prototype.
 
@@ -92,7 +92,7 @@ class Projectile:  # Class that defines each projectile (e.g. bullets) in the ga
 
 class Bullet(Projectile):  # Class that defines the bullet projectile
     def __init__(self, x, y, radius, colour, velocity):
-        super().__init__(x, y, radius, colour)
+        super().__init__(x, y, radius, colour)  # Calling __innit__ from Bullet
         self.velocity = velocity  # Starting velocity of the bullet
         self.speed = .5  # Speed at which a bullet moves. Currently not used in the prototype, but it is used in the
         # final version of the game.
