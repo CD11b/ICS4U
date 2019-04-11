@@ -80,7 +80,6 @@ class Character(pygame.sprite.Sprite):
             win.blit(self.lookIdle, (self.x, self.y))
 
 
-
 class Player(Character, pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, name, health):
         super().__init__(x, y, width, height, name)
@@ -232,7 +231,6 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-
         if keys[pygame.K_r]:
             del shots[:]
             loaded = True
@@ -268,7 +266,7 @@ while run:
 
                         if player.left:
 
-                            if clicks[s][0] <= (player.x + player.height/2 + player.width/2) - 200:
+                            if clicks[s][0] <= (player.x + player.height/2 + player.width/2) - 100:
                                 if clicks[s][1] <= (player.y + player.height/2 + player.width/2) + 200:
                                     if clicks[s][1] >= (player.y + player.height/2 + player.width/2) - 200:
                                         bullets.append(Bullet(player.x, player.y + 75))
@@ -279,7 +277,7 @@ while run:
 
                         if player.right:
 
-                            if clicks[s][0] >= (player.x + player.height/2 + player.width/2) + 200:
+                            if clicks[s][0] >= (player.x + player.height/2 + player.width/2) + 100:
                                 if clicks[s][1] >= (player.y + player.height/2 + player.width/2) - 200:
                                     if clicks[s][1] <= (player.y + player.height/2 + player.width/2) + 200:
                                         bullets.append(Bullet(player.x + 57, player.y + 7))
@@ -289,7 +287,7 @@ while run:
                             break
 
                         if player.up:
-                            if clicks[s][1] <= (player.y + player.height/2 + player.width/2) - 200:
+                            if clicks[s][1] <= (player.y + player.height/2 + player.width/2) - 100:
                                 if clicks[s][0] >= (player.x + player.height/2 + player.width/2) - 200:
                                     if clicks[s][0] <= (player.x + player.height/2 + player.width/2) + 200:
                                         bullets.append(Bullet(player.x + 7, player.y))
@@ -308,7 +306,7 @@ while run:
                                         break
                             break
 
-                        if clicks[s][0] >= (player.x + player.height / 2 + player.width / 2) + 200:
+                        if clicks[s][0] >= (player.x + player.height / 2 + player.width / 2) + 100:
                             if clicks[s][1] >= (player.y + player.height / 2 + player.width / 2) - 200:
                                 if clicks[s][1] <= (player.y + player.height / 2 + player.width / 2) + 200:
                                     bullets.append(Bullet(player.x + 57, player.y + 7))
@@ -320,24 +318,25 @@ while run:
                     else:
                         pass
 
-    if len(guards) <= 1:
+    if len(guards) <= 0:
         guards.append(Mob(1250, 400, 82, 61, 'GuardGun', 6))
 
     g = 0
     for bullet in bullets:
+        try:
+            if bullet.y - bullet.radius < guards[g].hitbox[1] + guards[g].hitbox[3] and bullet.y + bullet.radius > guards[g].hitbox[1]:
+                if bullet.x + bullet.radius > guards[g].hitbox[0] and bullet.x - bullet.radius < guards[g].hitbox[0] + guards[g].hitbox[2]:
 
-        if bullet.y - bullet.radius < guards[g].hitbox[1] + guards[g].hitbox[3] and bullet.y + bullet.radius > guards[g].hitbox[1]:
-            if bullet.x + bullet.radius > guards[g].hitbox[0] and bullet.x - bullet.radius < guards[g].hitbox[0] + guards[g].hitbox[2]:
+                    guards[g].shot()
+                    for guard in guards:
+                        print(guards[g].health)
 
-                guards[g].shot()
-                for guard in guards:
-                    print(guards[g].health)
+                        if guards[g].health == 0:
+                            guards.pop(guards.index(guard))
 
-                    if guards[g].health == 0:
-                        guards.pop(guards.index(guard))
-
-
-                bullets.pop(bullets.index(bullet))
+                    bullets.pop(bullets.index(bullet))
+        except IndexError:
+            pass
 
         if screen_width > bullet.x > 0:
 
@@ -358,7 +357,11 @@ while run:
                     pass
 
         else:
-                bullets.pop(bullets.index(bullet))
+                try:
+                    bullets.pop(bullets.index(bullet))
+
+                except ValueError:
+                    pass
 
 
 
