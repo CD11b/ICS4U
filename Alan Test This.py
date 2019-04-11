@@ -24,6 +24,17 @@ pygame.display.set_caption("Limbo")
 bg = pygame.image.load('JailCell1.png')
 
 
+def text_objects(text, color, size):
+    if size == "small":
+        textsurface = smallfont.render(text, True, color)
+    elif size == "medium":
+        textsurface = medfont.render(text, True, color)
+    elif size == "large":
+        textsurface = largefont.render(text, True, color)
+
+    return textsurface, textsurface.get_rect()
+
+
 def message_to_screen(msg, color, y_dispalce=0, size = "small"):
     textsurf, textrect = text_objects(msg, color, size)
     textrect.center = (screen_width/2), (screen_height/2) + y_dispalce
