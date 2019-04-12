@@ -472,8 +472,8 @@ def lvlup():
 clock = pygame.time.Clock()
 run = True
 
-#game_intro()
-#how_to()
+game_intro()
+how_to()
 while run:
     global n
 
