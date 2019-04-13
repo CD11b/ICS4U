@@ -335,20 +335,24 @@ class Mob(Character, pygame.sprite.Sprite):
             bullet.guard_player_dx = (player.x - player.width)/2 - (self.x - self.width)/2
             bullet.guard_player_dy = (player.y - player.height)/2 - (self.y - self.height)/2
             bullet.angle = atan2(bullet.guard_player_dy, bullet.guard_player_dx)
-            bullet.new_velocity = (.5 * cos(bullet.angle), .5 * sin(bullet.angle))
+            bullet.new_velocity = (guard_bullets[n].speed * cos(bullet.angle), guard_bullets[n].speed * sin(bullet.angle))
             guard_bullets[n].velocity = bullet.new_velocity
 
     def shoot(self):
 
-        if len(guard_shots) < 60:
-            self.start_shoot()
+        if len(guard_shots) <= 8:
+            now = pygame.time.get_ticks()
+            if now - self.last >= 1500:
+                self.last = now
+                self.start_shoot()
 
-        else:
+        if len(guard_shots) > 8:
 
             now = pygame.time.get_ticks()
-            if now - self.last >= 500:
+            if now - self.last >= 4000:
+                self.last = now
                 del guard_shots[:]
-                self.shoot()
+
 
     def start_shoot(self):
 
@@ -386,6 +390,8 @@ class Mob(Character, pygame.sprite.Sprite):
             self.bullet_velocity(7, 0)
             guard_shots.append([])
 
+
+    def bullet_change(self):
 
         for bullet in guard_bullets:
 
@@ -457,10 +463,12 @@ def redraw():
     lvlup()
     for i in player_bullets:
         i.draw()
+
     for c in guards:
         c.chase()
         c.draw()
         c.shoot()
+        c.bullet_change()
     for i in guard_bullets:
         i.draw()
 
