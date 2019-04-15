@@ -1,4 +1,5 @@
 import pygame
+import time
 from math import atan2, sin, cos
 
 pygame.init()
@@ -22,7 +23,6 @@ pygame.display.set_caption("Limbo")
 
 
 bg = pygame.image.load('Level_1.png')
-
 
 
 def text_objects(text, color, size):
@@ -95,7 +95,7 @@ def how_to():
         win.fill(black)
         message_to_screen("Instructions",
                           green,
-                          -100,
+                          -150,
                           "large")
         message_to_screen("Press W to move up, A to move left, S to move down, and D to move right",
                           white,
@@ -185,10 +185,11 @@ class Character(pygame.sprite.Sprite):
         else:
             pass
 
+
 class Player(Character, pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, name, health):
         super().__init__(x, y, width, height, name)
-        self.health = health
+        self.health = 10
         self.speed = 5
         self.loaded = True
         self.alive = True
@@ -204,6 +205,7 @@ class Player(Character, pygame.sprite.Sprite):
             bullet.new_velocity = (player_bullets[n].speed * cos(bullet.angle), player_bullets[n].speed * sin(bullet.angle))
             player_bullets[n].velocity = bullet.new_velocity
 
+
     def bulletVelCalc(self):
         mouse_positions = pygame.mouse.get_pos()
         pos_none = (0, 0)
@@ -212,19 +214,49 @@ class Player(Character, pygame.sprite.Sprite):
         for click in clicks:
             s = len(clicks) - 1
             clicks[s] = mouse_positions
+            if self.loaded == True:
 
-            if self.left:
+                if self.left:
 
-                if clicks[s][0] <= (self.x + self.height / 2 + self.width / 2) - 100:
-                    if clicks[s][1] <= (self.y + self.height / 2 + self.width / 2) + 200:
+                    if clicks[s][0] <= (self.x + self.height / 2 + self.width / 2) - 100:
+                        if clicks[s][1] <= (self.y + self.height / 2 + self.width / 2) + 200:
+                            if clicks[s][1] >= (self.y + self.height / 2 + self.width / 2) - 200:
+                                player_bullets.append(Bullet(self.x, self.y + 75))
+                                self.bullet_velocity(0, 75)
+                                shots.append([])
+                                break
+                    break
+
+                if self.right:
+
+                    if clicks[s][0] >= (self.x + self.height / 2 + self.width / 2) + 100:
                         if clicks[s][1] >= (self.y + self.height / 2 + self.width / 2) - 200:
-                            player_bullets.append(Bullet(self.x, self.y + 75))
-                            self.bullet_velocity(0, 75)
-                            shots.append([])
-                            break
-                break
+                            if clicks[s][1] <= (self.y + self.height / 2 + self.width / 2) + 200:
+                                player_bullets.append(Bullet(self.x + 57, self.y + 7))
+                                self.bullet_velocity(57, 7)
+                                shots.append([])
+                                break
+                    break
 
-            if self.right:
+                if self.up:
+                    if clicks[s][1] <= (self.y + self.height / 2 + self.width / 2) - 100:
+                        if clicks[s][0] >= (self.x + self.height / 2 + self.width / 2) - 200:
+                            if clicks[s][0] <= (self.x + self.height / 2 + self.width / 2) + 200:
+                                player_bullets.append(Bullet(self.x + 7, self.y))
+                                self.bullet_velocity(7, 0)
+                                shots.append([])
+                                break
+                    break
+
+                if self.down:
+                    if clicks[s][1] >= self.y + 200:
+                        if clicks[s][0] >= (self.x + self.height / 2 + self.width / 2) - 200:
+                            if clicks[s][0] <= (self.x + self.height / 2 + self.width / 2) + 200:
+                                player_bullets.append(Bullet(self.x + 75, self.y + 57))
+                                self.bullet_velocity(75, 57)
+                                shots.append([])
+                                break
+                    break
 
                 if clicks[s][0] >= (self.x + self.height / 2 + self.width / 2) + 100:
                     if clicks[s][1] >= (self.y + self.height / 2 + self.width / 2) - 200:
@@ -235,40 +267,12 @@ class Player(Character, pygame.sprite.Sprite):
                             break
                 break
 
-            if self.up:
-                if clicks[s][1] <= (self.y + self.height / 2 + self.width / 2) - 100:
-                    if clicks[s][0] >= (self.x + self.height / 2 + self.width / 2) - 200:
-                        if clicks[s][0] <= (self.x + self.height / 2 + self.width / 2) + 200:
-                            player_bullets.append(Bullet(self.x + 7, self.y))
-                            self.bullet_velocity(7, 0)
-                            shots.append([])
-                            break
-                break
-
-            if self.down:
-                if clicks[s][1] >= self.y + 200:
-                    if clicks[s][0] >= (self.x + self.height / 2 + self.width / 2) - 200:
-                        if clicks[s][0] <= (self.x + self.height / 2 + self.width / 2) + 200:
-                            player_bullets.append(Bullet(self.x + 75, self.y + 57))
-                            self.bullet_velocity(75, 57)
-                            shots.append([])
-                            break
-                break
-
-            if clicks[s][0] >= (self.x + self.height / 2 + self.width / 2) + 100:
-                if clicks[s][1] >= (self.y + self.height / 2 + self.width / 2) - 200:
-                    if clicks[s][1] <= (self.y + self.height / 2 + self.width / 2) + 200:
-                        player_bullets.append(Bullet(self.x + 57, self.y + 7))
-                        self.bullet_velocity(57, 7)
-                        shots.append([])
-                        break
-            break
-
         else:
             pass
 
 guard_clicks = []
 guard_shots = []
+
 
 class Mob(Character, pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, name, health):
@@ -315,8 +319,9 @@ class Mob(Character, pygame.sprite.Sprite):
             self.down = False
 
         if self.x == player.x and self.y == player.y:
-            message_to_screen("You lost", red)
+            message_to_screen("You lost", red, 0, size="medium")
             pygame.display.update()
+            time.sleep(3)
             pygame.quit()
 
         else:
@@ -401,9 +406,9 @@ class Mob(Character, pygame.sprite.Sprite):
 
                         if player.health == 0:
                             pass
-                            #message_to_screen("You lost", red)
-                            #pygame.display.update()
-                            #pygame.quit()
+                            # message_to_screen("You lost", red)
+                            # pygame.display.update()
+                            # pygame.quit()
 
                         guard_bullets.pop(guard_bullets.index(bullet))
 
@@ -453,8 +458,8 @@ class Bullet(Projectile):
         self.color = black
         self.speed = 15
 
-guard = Mob(1250, 255, 82, 61, 'GuardGun', 6)
-player = Player(200, 200, 82, 49, 'prisoner', 6)
+guard = Mob(1250, 255, 82, 50, 'Guard', 10)
+player = Player(200, 200, 83, 55, 'player', 10)
 b = Bullet(player.x, player.y)
 
 def redraw():
@@ -476,7 +481,7 @@ def redraw():
 
 
 def lvl1window():
-    win.blit(lvl1, (0, 0))
+    win.blit(bg, (0, 0))
     player.draw()
     lvlup()
     pygame.display.update()
@@ -499,8 +504,8 @@ def lvlup():
 clock = pygame.time.Clock()
 run = True
 
-#game_intro()
-#how_to()
+game_intro()
+how_to()
 while run:
     global n
 
@@ -511,19 +516,19 @@ while run:
             run = False
         if keys[pygame.K_r]:
             del shots[:]
-            loaded = True
+            player.loaded = True
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if len(player_bullets) < 6:
 
                 loaded = True
-                if len(shots) == 6:
-                    loaded = False
+                if len(shots) >= 6:
+                    player.loaded = False
 
                 player.bulletVelCalc()
 
     if len(guards) <= 0:
-        guards.append(Mob(1250, 400, 82, 61, 'GuardGun', 6))
+        guards.append(Mob(1250, 400, 82, 61, 'Guard', 10))
 
     g = 0
     for bullet in player_bullets:
@@ -567,29 +572,28 @@ while run:
                 except ValueError:
                     pass
 
-
-    if keys[pygame.K_a] and player.x > 0:
+    if keys[pygame.K_a] and player.x > 0 + 3:
         player.x -= player.speed
         player.left = True
         player.right = False
         player.down = False
         player.up = False
 
-    if keys[pygame.K_d] and player.x + player.width < screen_width - player.width:
+    if keys[pygame.K_d] and player.x < screen_width - player.height - 25:
         player.x += player.speed
         player.left = False
         player.right = True
         player.down = False
         player.up = False
 
-    if keys[pygame.K_w] and player.y > 0:
+    if keys[pygame.K_w] and player.y > 207:
         player.y -= player.speed
         player.left = False
         player.right = False
         player.down = False
         player.up = True
 
-    if keys[pygame.K_s] and player.y + player.width < screen_height - player.height:
+    if keys[pygame.K_s] and player.y < 0 + 325:
         player.y += player.speed
         player.left = False
         player.right = False
