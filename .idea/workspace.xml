@@ -3,10 +3,30 @@
   <component name="ChangeListManager">
     <list default="true" id="07cd874c-84f5-4892-83cd-df3c1e31313a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlanHealth [OLD].py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AlanWallRestrictions.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Level_1.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Level_2.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Level_3.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Level_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OldLimbos/1x90 Key Press Movement.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OldLimbos/4x90 Movement.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OldLimbos/Final Unmerged [shoot, reload, shooting box unfinished].py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OldLimbos/Limbo [OLD] [merged] [Shoot, guard health not functional].py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OldLimbos/No movement [NOT WORKING].py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OldLimbos/Shoot, no restrictions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OldLimbos/Shooting without reload.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prototype Comments/Alan Comments.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prototype Comments/Greg Comments.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prototype Comments/Jesse Comments.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Version 1.0 (Alan Test This).py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Version 1.1 (Guard Shooting).py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Version 1.2.0.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Version 1.3.0.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Version 1.3.1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Version 1.4.0.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Version 3.4.0.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/codejx [Unmerged].py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/images/Gunroom.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/images/Level_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/Level_2.png" afterDir="false" />
     </list>
@@ -17,7 +37,19 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Version 1.5.0.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-14586">
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -85,7 +117,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-33" />
     <option name="y" value="116" />
     <option name="width" value="1346" />
@@ -251,6 +283,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.497545" visible="true" weight="0.21709532" />
       <window_info id="Structure" order="1" sideWeight="0.502455" side_tool="true" weight="0.27760968" />
@@ -378,6 +411,15 @@
           <folding>
             <element signature="e#0#13#0" expanded="true" />
             <element signature="e#36348#36719#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Version 1.5.0.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-14586">
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
