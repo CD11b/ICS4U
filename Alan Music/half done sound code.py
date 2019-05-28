@@ -17,6 +17,8 @@ grey = (210, 210, 210)
 bsound = pygame.mixer.Sound("Button1.wav")
 cashout = pygame.mixer.Sound("Button1.wav")
 selfdmg = pygame.mixer.Sound("selfdmg.wav")
+reloadsound = pygame.mixer.Sound("reloadsound.wav")
+gunsound = pygame.mixer.Sound("gunsound.wav")
 
 # defining different fonts which will be used in a function that allows us to display text in our game
 smallfont = pygame.font.SysFont("comicsansms", 25)  # Small Comic Sans font
@@ -741,6 +743,7 @@ class Player(Character, pygame.sprite.Sprite):  # Class that defines the player/
                         if clicks[s][1] <= (self.y + self.height / 2 + self.width / 2) + 200:
                             if clicks[s][1] >= (self.y + self.height / 2 + self.width / 2) - 200:
                                 player_bullets.append(Bullet(self.x, self.y + 75))  # Create the bullet
+                                gunsound.play()
                                 self.bullet_velocity(0, 75)  # Give the bullet its velocity
                                 # Add an element to the shots list that determines if the gun is loaded
                                 shots.append([])
@@ -755,6 +758,7 @@ class Player(Character, pygame.sprite.Sprite):  # Class that defines the player/
                         if clicks[s][1] >= (self.y + self.height / 2 + self.width / 2) - 200:
                             if clicks[s][1] <= (self.y + self.height / 2 + self.width / 2) + 200:
                                 player_bullets.append(Bullet(self.x + 57, self.y + 7))  # Create the bullet
+                                gunsound.play()
                                 self.bullet_velocity(57, 7)  # Give the bullet its velocity
                                 # Add an element to the shots list that determines if the gun is loaded
                                 shots.append([])
@@ -783,6 +787,7 @@ class Player(Character, pygame.sprite.Sprite):  # Class that defines the player/
                         if clicks[s][0] >= (self.x + self.height / 2 + self.width / 2) - 200:
                             if clicks[s][0] <= (self.x + self.height / 2 + self.width / 2) + 200:
                                 player_bullets.append(Bullet(self.x + 75, self.y + 57))  # Create the bullet
+                                gunsound.play()
                                 self.bullet_velocity(75, 57)  # Give the bullet its velocity
                                 # Add an element to the shots list that determines if the gun is loaded
                                 shots.append([])
@@ -797,6 +802,7 @@ class Player(Character, pygame.sprite.Sprite):  # Class that defines the player/
                         if clicks[s][1] >= (self.y + self.height / 2 + self.width / 2) - 200:
                             if clicks[s][1] <= (self.y + self.height / 2 + self.width / 2) + 200:
                                 player_bullets.append(Bullet(self.x + 57, self.y + 7))  # Create the bullet
+                                gunsound.play()
                                 self.bullet_velocity(57, 7)  # Give the bullet its velocity
                                 # Add an element to the shots list that determines if the gun is loaded
                                 shots.append([])
@@ -1648,6 +1654,7 @@ def game_loop():
                 run = False  # End the game
 
             if keys[pygame.K_r]:  # If the r key is pressed
+                reloadsound.play() # Plays sound for gun reloading
                 del shots[:]  # Clear the list that counts the number of shots made
                 player.loaded = True  # Insures that the character is loaded to shoot
                 global ammoleft
@@ -1672,12 +1679,14 @@ def game_loop():
 
             if event.type == pygame.MOUSEBUTTONDOWN:  # If the mouse is clicked
                 if len(player_bullets) < 6:  # If the number of bullets on the screen at any time is less than or equal to six
-
+                   # gunsound.play()
                     if len(shots) >= 6:  # If 6 bullets have been shot
                         player.loaded = False  # Gun is no longer loaded with enough bullets to shoot. The player must reload.
+                        pygame.mixer.pause()
 
                         if weapon == 1:
                             player.loaded = True
+
                         else:
                             pass
 
@@ -1708,6 +1717,7 @@ def game_loop():
                                     guards[g].hitbox[2]:
 
                                 guards[g].shot()  # Guard loses 1 health
+                                selfdmg.play()
                                 for guard in guards:  # For each guard
                                     if guards[g].health == 0:  # If the guard has 0 health
                                         guards_killed.append([])  # Add to the number of guards killed
