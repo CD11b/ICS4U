@@ -1691,10 +1691,10 @@ def game_loop():
 
                     player.bulletVelCalc()  # Function that starts moving the bullet toward the click's position
 
-        if len(guards) == 0 and level_list[0] == 1:  # If the player is on level 1, start adding guards to the screen
+        if len(guards) == 0 and level_list[0] == 1 and len(guards_killed) < 7:  # If the player is on level 1, start adding guards to the screen
             guards.append(Mob(1200, 255, 82, 61, 'Guard', 10))
 
-        if len(guardTowers) == 0 and level_list[0] == 4:  # If the player is on level 2, start adding towers to the screen
+        if len(guardTowers) == 0 and level_list[0] == 4 and len(guardTowersKilled) < 2:  # If the player is on level 2, start adding towers to the screen
             guardTowers.append(GuardTower(715, 555, 82, 61, 10))
             guardTowers.append(GuardTower(715, 60, 82, 61, 10))
 
