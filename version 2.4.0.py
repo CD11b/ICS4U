@@ -1,10 +1,12 @@
 import pygame
 import time  # Imported to pause the game before exiting
 from math import atan2, sin, cos  # Imported to calculate bullet to player angles
+
 weapon = 0
 ammoleft = 96
 able = True
 pygame.init()  # Initialize all imported Pygame modules
+pygame.mixer.init()
 
 # Defining colours with hexadecimal values
 black = (0, 0, 0)
@@ -15,12 +17,12 @@ grey = (210, 210, 210)
 
 # Defining sounds
 bsound = pygame.mixer.Sound("Button1.wav")
-cashout = pygame.mixer.Sound("Button1.wav")
 selfdmg = pygame.mixer.Sound("selfdmg.wav")
-reloadsound = pygame.mixer.Sound("reloadsound.wav")
+reloadsound = pygame.mixer.Sound("reload.wav")
 gunsound = pygame.mixer.Sound("gunsound.wav")
 purchasesound = pygame.mixer.Sound("purchasesound.wav")
 nocoinsound = pygame.mixer.Sound("nocoinsound.wav")
+shopselect = pygame.mixer.Sound("shopselect.wav")
 
 # defining different fonts which will be used in a function that allows us to display text in our game
 smallfont = pygame.font.SysFont("comicsansms", 25)  # Small Comic Sans font
@@ -54,6 +56,7 @@ def message_to_screen(msg, color, x, y, size):  # Used to show text on the scree
     textrect.center = (x, y)
     win.blit(textsurf, textrect)
 
+
 start = pygame.image.load('start.png')
 info = pygame.image.load('info.png')
 ak47 = pygame.image.load("AK47.png")
@@ -61,6 +64,36 @@ ammo = pygame.image.load("Ammo.png")
 sniper = pygame.image.load('Sniper.png')
 vest = pygame.image.load('Vest.png')
 locked = pygame.image.load('Locked.png')
+
+intro_frame_number = 0
+intro_frames = []
+while intro_frame_number <= 359:
+    intro_frame_number += 1
+    if intro_frame_number < 10:
+        intro_frames.append(pygame.image.load("IntroGifs/frame_00" + str(intro_frame_number) + "_delay-0.04s.gif"))
+    elif intro_frame_number < 100:
+        intro_frames.append(pygame.image.load("IntroGifs/frame_0" + str(intro_frame_number) + "_delay-0.04s.gif"))
+    else:
+        intro_frames.append(pygame.image.load("IntroGifs/frame_" + str(intro_frame_number) + "_delay-0.04s.gif"))
+
+outro_frame_number = 0
+outro_frames = []
+while outro_frame_number <= 53:
+    outro_frame_number += 1
+    if outro_frame_number < 10:
+        outro_frames.append(pygame.image.load("OutroGifs/frame_0" + str(outro_frame_number) + "_delay-0.04s.gif"))
+    elif outro_frame_number < 100:
+        outro_frames.append(pygame.image.load("OutroGifs/frame_" + str(outro_frame_number) + "_delay-0.04s.gif"))
+    else:
+        pass
+
+
+def gameOver():
+    GameOver = pygame.image.load("gameover.png")
+    win.blit(GameOver, (0, 0))
+    pygame.display.update()
+    time.sleep(8)
+    pygame.quit()
 
 
 def game_intro():
@@ -189,7 +222,7 @@ def shoplocked():
 run = True
 greyButton1 = button(grey, 116, 416, 250, 100, 'Start')
 greyButton2 = button(grey, 738, 418, 250, 100, 'Info')
-greyButton3 = button(grey, 0, 500, 250, 100, 'Back')    # back botton
+greyButton3 = button(grey, 0, 500, 250, 100, 'Back')  # back botton
 shopButton1 = button(grey, 950, 0, 250, 100, 'Shop')
 shopButton2 = button(grey, 950, 500, 250, 100, 'Exit')
 ak47but = button(grey, 875, 202, 320, 75, 'AK47')
@@ -219,7 +252,6 @@ def startbuttons():
                     bsound.play()
                     print("Game Starts")
                     game_loop()
-
                 if greyButton2.isOver(pos):
                     bsound.play()
                     print("Instructions")
@@ -278,9 +310,11 @@ def shop():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if shopButton1.isOver(pos):
+                    bsound.play()
                     shop1()
 
                 if shopButton2.isOver(pos):
+                    bsound.play()
                     player.x = 75
                     player.y = 255
 
@@ -305,7 +339,7 @@ def shop():
                     shopButton2.color = grey
 
 
-def shop1():    #ak47
+def shop1():  # ak47
     global run
     while run:
         shopak47()
@@ -324,26 +358,37 @@ def shop1():    #ak47
                     bsound.play()
                     shop()
                 elif buy.isOver(pos):
+                    global ammoleft
+                    global weapon
                     if player_gold[0] - 250 >= 0:
-                        player_gold[0] -= 250
-                        global weapon
-                        weapon = 1
-                        purchasesound.play()
-                        print("Item Bought")
+                        if weapon == 11:
+                            player_gold[0] -= 250
+                            weapon = 1
+                            purchasesound.play()
+                            print("Item Bought")
+                            stock[0] += ammoleft
+                            ammoleft = 0
+                        else:
+                            player_gold[0] -= 250
+                            weapon = 1
                     else:
-                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium" )
-                        nocoinsound.play()
+                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")
                         pygame.display.update()
+                        nocoinsound.play()
                         time.sleep(1)
                         pygame.display.update()
                 elif sniperbut.isOver(pos):
                     shop2()
+                    shopselect.play()
                 elif vestbut.isOver(pos):
                     shop3()
+                    shopselect.play()
                 elif ammobut.isOver(pos):
                     shop4()
+                    shopselect.play()
                 elif lockedbut.isOver(pos):
                     shop5()
+                    shopselect.play()
                 else:
                     pass
 
@@ -369,7 +414,7 @@ def shop1():    #ak47
                     lockedbut.color = grey
 
 
-def shop2():     # sniper
+def shop2():  # sniper
     global run
     while run:
         shopsniper()
@@ -395,19 +440,23 @@ def shop2():     # sniper
                         purchasesound.play()
                         print("Item Bought")
                     else:
-                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium" )
-                        nocoinsound.play()
+                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")
                         pygame.display.update()
                         time.sleep(1)
                         pygame.display.update()
+                        nocoinsound.play()
                 elif ak47but.isOver(pos):
                     shop1()
+                    shopselect.play()
                 elif vestbut.isOver(pos):
                     shop3()
+                    shopselect.play()
                 elif ammobut.isOver(pos):
                     shop4()
+                    shopselect.play()
                 elif lockedbut.isOver(pos):
                     shop5()
+                    shopselect.play()
                 else:
                     pass
 
@@ -433,7 +482,7 @@ def shop2():     # sniper
                     lockedbut.color = grey
 
 
-def shop3():     # vest
+def shop3():  # vest
     global run
     while run:
         shopvest()
@@ -456,22 +505,26 @@ def shop3():     # vest
                         player_gold[0] -= 250
                         global weapon
                         weapon = 3
-                        purchasesound.play()
                         print("Item Bought")
+                        purchasesound.play()
                     else:
-                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium" )
-                        nocoinsound.play()
+                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")
                         pygame.display.update()
                         time.sleep(1)
                         pygame.display.update()
+                        nocoinsound.play()
                 elif ak47but.isOver(pos):
                     shop1()
+                    shopselect.play()
                 elif sniperbut.isOver(pos):
                     shop2()
+                    shopselect.play()
                 elif ammobut.isOver(pos):
                     shop4()
+                    shopselect.play()
                 elif lockedbut.isOver(pos):
                     shop5()
+                    shopselect.play()
                 else:
                     pass
 
@@ -518,6 +571,7 @@ def shop4():  # ammo
                 elif buy.isOver(pos):
                     if player_gold[0] - 50 >= 0:
                         player_gold[0] -= 50
+                        global weapon
                         if weapon == 1:
                             global ammoleft
                             stock[0] += ammoleft
@@ -525,14 +579,15 @@ def shop4():  # ammo
                             ammoleft = 0
                         else:
                             ammoleft += 50
+                            weapon = 11
                         print("Item Bought")
                         purchasesound.play()
                     else:
-                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium" )
-                        nocoinsound.play()
+                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")
                         pygame.display.update()
                         time.sleep(1)
                         pygame.display.update()
+                        nocoinsound.play()
                 elif ak47but.isOver(pos):
                     shop1()
                 elif sniperbut.isOver(pos):
@@ -586,15 +641,19 @@ def shop5():
                     shop()
                 elif buy.isOver(pos):
                     print("Item Bought")
-                    purchasesound.play()
+                    nocoinsound.play()
                 elif ak47but.isOver(pos):
+                    shopselect.play()
                     shop1()
                 elif sniperbut.isOver(pos):
                     shop2()
+                    shopselect.play()
                 elif vestbut.isOver(pos):
                     shop3()
+                    shopselect.play()
                 elif ammobut.isOver(pos):
                     shop4()
+                    shopselect.play()
                 else:
                     pass
 
@@ -699,11 +758,12 @@ class Character(pygame.sprite.Sprite):
 class Player(Character, pygame.sprite.Sprite):  # Class that defines the player/prisoner
     def __init__(self, x, y, width, height, name, health):
         super().__init__(x, y, width, height, name)  # Calling __init__ from Character
-        self.speed = 25  # Player speed
+        self.speed = 5  # Player speed
         self.loaded = True  # Player's gun is loaded
         self.alive = True  # Player is alive (health > 0)
         self.health = 10
         self.armour = 0
+
     # Function that determines the velocity (speed + direction) of the bullet
     def bullet_velocity(self, change_x, change_y):
         for bullet in player_bullets:  # For each bullet shot
@@ -719,7 +779,8 @@ class Player(Character, pygame.sprite.Sprite):  # Class that defines the player/
             bullet.angle = atan2(bullet.mouse_player_dy, bullet.mouse_player_dx)
 
             # Calculate the velocity of the bullet using the speed and direction (angle)
-            bullet.new_velocity = (player_bullets[n].speed * cos(bullet.angle), player_bullets[n].speed * sin(bullet.angle))
+            bullet.new_velocity = (
+            player_bullets[n].speed * cos(bullet.angle), player_bullets[n].speed * sin(bullet.angle))
 
             # Change the initial velocity of the bullet to the final (calculated) velocity of the bullet
             # This is used later to show the bullet moving in the click's direction
@@ -874,7 +935,8 @@ class Mob(Character, pygame.sprite.Sprite):  # Class that defines each guard
             message_to_screen("You lost", red, player.x, player.y, size="medium")
             pygame.display.update()
             time.sleep(3)
-            pygame.quit()
+            gameOver()
+
 
         else:
             pass
@@ -906,7 +968,8 @@ class Mob(Character, pygame.sprite.Sprite):  # Class that defines each guard
             bullet.angle = atan2(bullet.guard_player_dy, bullet.guard_player_dx)
 
             # Calculate and add the bullet velocity to each specific bullet's position in the list
-            bullet.new_velocity = (guard_bullets[n].speed * cos(bullet.angle), guard_bullets[n].speed * sin(bullet.angle))
+            bullet.new_velocity = (
+            guard_bullets[n].speed * cos(bullet.angle), guard_bullets[n].speed * sin(bullet.angle))
             guard_bullets[n].velocity = bullet.new_velocity
 
     def shoot(self):
@@ -965,7 +1028,7 @@ class Mob(Character, pygame.sprite.Sprite):  # Class that defines each guard
                         message_to_screen("You lost", red, player.x, player.y, size="medium")
                         pygame.display.update()
                         time.sleep(3)
-                        pygame.quit()
+                        gameOver()
 
                     # Pop/delete the bullet after it hits a player
                     guard_bullets.pop(guard_bullets.index(bullet))
@@ -998,9 +1061,11 @@ class Mob(Character, pygame.sprite.Sprite):  # Class that defines each guard
                 except ValueError:
                     pass
 
+
 guardTowerBullets = []  # List that holds each bullet for a tower
 guardTowers = []  # List that keeps track of how many towers are in the game
 guardTowersKilled = []  # List that keeps track of how many towers have been killed
+
 
 class GuardTower(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, health):
@@ -1076,7 +1141,8 @@ class GuardTower(pygame.sprite.Sprite):
                         pass
                         message_to_screen("You lost", red, player.x, player.y, size="medium")
                         pygame.display.update()
-                        pygame.quit()
+                        time.sleep(3)
+                        gameOver()
 
                     guardTowerBullets.pop(guardTowerBullets.index(bullet))
 
@@ -1112,11 +1178,12 @@ wardens = []  # List that holds the warden sprite
 warden_shots = []  # List that keeps track of how many bullets the warden has shot
 wardens_killed = []  # List that keeps track of how many wardens have been killed
 
+
 class Warden(Character, pygame.sprite.Sprite):  # Class that defines the warden
     def __init__(self, x, y, width, height, name, health):
         super().__init__(x, y, width, height, name)  # Calling __init__ from Character
         self.health = health  # Warden health
-        self.speed = .5  # Warden speed
+        self.speed = 3  # Warden speed
         self.hitbox = (self.x - 8, self.y, 90, 90)  # Warden hitbox
 
         # Used to change how fast the guard can shoot
@@ -1162,7 +1229,7 @@ class Warden(Character, pygame.sprite.Sprite):  # Class that defines the warden
             message_to_screen("You lost", red, player.x, player.y, size="medium")
             pygame.display.update()
             time.sleep(3)
-            pygame.quit()
+            gameOver()
 
         else:
             pass
@@ -1170,7 +1237,7 @@ class Warden(Character, pygame.sprite.Sprite):  # Class that defines the warden
         self.hitbox = (self.x - 10, self.y, 90, 80)
 
         # HEALTHBAR
-        pygame.draw.rect(win, (255, 0, 0), (self.hitbox[0], self.hitbox[1] - 20, 50, 10))
+        pygame.draw.rect(win, (255, 0, 0), (self.hitbox[0], self.hitbox[1] - 20, 100, 10))
         pygame.draw.rect(win, (0, 128, 0), (self.hitbox[0], self.hitbox[1] - 20, 50 - (5 * (10 - self.health)), 10))
 
     # Function that determines the velocity (speed + direction) of the bullet
@@ -1196,7 +1263,8 @@ class Warden(Character, pygame.sprite.Sprite):  # Class that defines the warden
             bullet.angle = atan2(bullet.guard_player_dy, bullet.guard_player_dx)
 
             # Calculate and add the bullet velocity to each specific bullet's position in the list
-            bullet.new_velocity = (warden_bullets[n].speed * cos(bullet.angle), warden_bullets[n].speed * sin(bullet.angle))
+            bullet.new_velocity = (
+            warden_bullets[n].speed * cos(bullet.angle), warden_bullets[n].speed * sin(bullet.angle))
             warden_bullets[n].velocity = bullet.new_velocity
 
     def shoot(self):
@@ -1256,7 +1324,7 @@ class Warden(Character, pygame.sprite.Sprite):  # Class that defines the warden
                         pass
                         message_to_screen("You lost", red, player.x, player.y, size="medium")
                         pygame.display.update()
-                        pygame.quit()
+                        gameOver()
 
                     # Pop/delete the bullet after it hits a player
                     warden_bullets.pop(warden_bullets.index(bullet))
@@ -1310,9 +1378,9 @@ class Bullet(Projectile):  # Class that defines the bullet projectile
 
 def guardsKilled():  # Function that shows how many enemy players have been killed on the screen
     if weapon == 1:
-        message_to_screen("Bullets left: "  + str(stock[0]), red, 1090, 580, "small")
+        message_to_screen("Bullets left: " + str(stock[0]), red, 1090, 580, "small")
     else:
-        if stock[0] >=0:
+        if stock[0] >= 0:
             message_to_screen("Bullets left: " + str(stock[0]) + "/" + str(ammoleft), red, 1090, 580, "small")
         if stock[0] <= 0:
             message_to_screen("Bullets left: 0/" + str(ammoleft), red, 1090, 580, "small")
@@ -1331,6 +1399,9 @@ player = Player(200, 255, 83, 55, 'player', 10)  # Defining the player by using 
 level_list = [1, 0]  # Creating a list that is used to indicate which level the player is on
 
 if level_list[0] == 1:  # If level 1
+    pygame.mixer.music.set_volume(0.5)
+    pygame.mixer.music.load('intro.mp3')
+    pygame.mixer.music.play(-1)
     level_list[1] = pygame.image.load("level_1.png")  # Level image sent to list
 
 player_gold = [0]
@@ -1338,7 +1409,8 @@ player_gold = [0]
 
 def redraw():  # Function used to draw to the screen
 
-    if level_list[0] == 1: # and len(guards_killed) >= 6:  # If player is on the first level and has cleared all of the enemies
+    if level_list[
+        0] == 1:  # and len(guards_killed) >= 6:  # If player is on the first level and has cleared all of the enemies
         if player.x == 1100:  # If player reaches the right side of the screen, send him back to the left side
             player.x = 75
             player.y = 255
@@ -1356,7 +1428,7 @@ def redraw():  # Function used to draw to the screen
             pass
 
     if level_list[0] == 2:  # If player is on the first level and has cleared all of the enemies
-        if player.x == 950:  # If player reaches the right side of the screen, send him back to the left side
+        if player.x == 970:  # If player reaches the right side of the screen, send him back to the left side
             player.x = 75
             player.y = 255
 
@@ -1375,9 +1447,10 @@ def redraw():  # Function used to draw to the screen
     if level_list[0] == 3:  # If player is on the first level and has cleared all of the enemies
         shop()
 
-    if level_list[0] == 4 and len(guardTowersKilled) >= 2:  # If player is on the second level and has cleared all of the enemies
+    if level_list[0] == 4 and len(
+            guardTowersKilled) >= 2:  # If player is on the second level and has cleared all of the enemies
 
-        if player.x == 900:  # If player reaches the right side of the screen, send him back to the left side
+        if player.x == 1050:  # If player reaches the right side of the screen, send him back to the left side
             player.x = 75
             player.y = 255
 
@@ -1390,11 +1463,12 @@ def redraw():  # Function used to draw to the screen
             player.down = False
             player.up = False
 
-    if level_list[0] == 5 and len(wardens_killed) >= 1:  # If player is on the third level and has cleared all of the enemies
+    if level_list[0] == 5 and len(
+            wardens_killed) >= 1:  # If player is on the third level and has cleared all of the enemies
 
-        if player.x == 900:  # If player reaches the right side of the screen, send him back to the left side
-            player.x = 75
-            player.y = 255
+        if player.x == 1050:  # If player reaches the right side of the screen, send him back to the left side
+            player.x = 255
+            player.y = 100
 
             level_list[0] += 1  # Increase the level number
             level_list[1] = pygame.image.load("level_" + str(level_list[0]) + ".png")  # Level image sent to list
@@ -1411,9 +1485,16 @@ def redraw():  # Function used to draw to the screen
             # Show "You Win" text on the screen
             message_to_screen("You won", green, player.x, player.y, size="medium")
             pygame.display.update()
-
             # Wait 3 seconds then close the game
             time.sleep(3)
+            times_ran_outro = 0
+
+            while times_ran_outro <= 5:
+                for frame in range(0, len(outro_frames)):
+                    time.sleep(0.1)
+                    win.blit(outro_frames[frame], (0, 0))
+                    pygame.display.update()
+                times_ran_outro += 1
             pygame.quit()
 
     win.blit(level_list[1], (0, 0))  # Show the current level image on the screen
@@ -1422,11 +1503,11 @@ def redraw():  # Function used to draw to the screen
         for i in player_bullets:  # For each of the player's bullets
             i.draw()  # Draw each bullet to the screen
 
-
     message_to_screen("Coins: " + str(player_gold[0]), red, 900, 20, "small")
     guardsKilled()  # Function that shows how many enemies the player has killed on the top right of the screen
     for guard in guards:  # For each guard
-        if len(guards_killed) <= 6 and level_list[0] == 1:  # Insure that the player has yet to clear all of the enemies on the 1st level
+        if len(guards_killed) <= 6 and level_list[
+            0] == 1:  # Insure that the player has yet to clear all of the enemies on the 1st level
             guard.chase()  # Guard chases player
             guard.draw()  # Guard's image is drawn to the screen
             guard.shoot()  # Guard shoots
@@ -1439,7 +1520,8 @@ def redraw():  # Function used to draw to the screen
         bullet.draw()  # Draw the bullet to the screen
 
     for tower in guardTowers:  # For each guard tower
-        if len(guardTowersKilled) <= 1 and level_list[0] == 4:  # Insure that the player has yet to clear all of the enemies on the 2nd level
+        if len(guardTowersKilled) <= 1 and level_list[
+            0] == 4:  # Insure that the player has yet to clear all of the enemies on the 2nd level
             tower.draw()  # Tower's health bar is drawn to the screen
             tower.shoot()  # Tower shoots
             tower.bullet_change()  # Bullet changes direction to follow the path to the player
@@ -1450,7 +1532,8 @@ def redraw():  # Function used to draw to the screen
         bullet.draw()  # Draw the bullet to the screen
 
     for warden in wardens:  # For each warden
-        if len(wardens_killed) <= 0 and level_list[0] == 5:  # Insure that the player has yet to clear all of the enemies on the 3rd level
+        if len(wardens_killed) <= 0 and level_list[
+            0] == 5:  # Insure that the player has yet to clear all of the enemies on the 3rd level
             warden.chase()  # Warden chases player
             warden.draw()  # Warden's image is drawn to the screen
             warden.shoot()  # Warden shoots
@@ -1483,14 +1566,14 @@ def levelRestrictions():  # Creating restrictions for each level/screen
             player.down = False
             player.up = False
 
-        if keys[pygame.K_w] and player.y > 205:
+        if keys[pygame.K_w] and player.y > 148:
             player.y -= player.speed
             player.left = False
             player.right = False
             player.down = False
             player.up = True
 
-        if keys[pygame.K_s] and player.y < 0 + 330:
+        if keys[pygame.K_s] and player.y < 0 + 383:
             player.y += player.speed
             player.left = False
             player.right = False
@@ -1498,7 +1581,7 @@ def levelRestrictions():  # Creating restrictions for each level/screen
             player.up = False
 
     if level_list[0] == 2:
-        if keys[pygame.K_a] and player.x > 0 + 4:
+        if keys[pygame.K_a] and player.x > 0 + 46:
             player.x -= player.speed
             player.left = True
             player.right = False
@@ -1512,65 +1595,37 @@ def levelRestrictions():  # Creating restrictions for each level/screen
             player.down = False
             player.up = False
 
-        if keys[pygame.K_w] and player.y > 205:
+        if keys[pygame.K_w] and player.y > 65:
             player.y -= player.speed
             player.left = False
             player.right = False
             player.down = False
             player.up = True
 
-        if keys[pygame.K_s] and player.y < 0 + 330:
+        if keys[pygame.K_s] and player.y < 0 + 454:
             player.y += player.speed
             player.left = False
             player.right = False
             player.down = True
             player.up = False
 
-    if level_list[0] == 3:
-        if keys[pygame.K_a] and player.x > 0 + 4:
-            player.x -= player.speed
-            player.left = True
-            player.right = False
-            player.down = False
-            player.up = False
-
-        if keys[pygame.K_d] and player.x < screen_width - player.height - 25:
-            player.x += player.speed
-            player.left = False
-            player.right = True
-            player.down = False
-            player.up = False
-
-        if keys[pygame.K_w] and player.y > 205:
-            player.y -= player.speed
-            player.left = False
-            player.right = False
-            player.down = False
-            player.up = True
-
-        if keys[pygame.K_s] and player.y < 0 + 330:
-            player.y += player.speed
-            player.left = False
-            player.right = False
-            player.down = True
-            player.up = False
     # boundaries for level 2
     if level_list[0] == 4:
-        if keys[pygame.K_a] and player.x > 0 + 215:
+        if keys[pygame.K_a] and player.x > 0 + 130:
             player.x -= player.speed
             player.left = True
             player.right = False
             player.down = False
             player.up = False
 
-        if keys[pygame.K_d] and player.x < screen_width - player.height - 225:
+        if keys[pygame.K_d] and player.x < screen_width - player.height:
             player.x += player.speed
             player.left = False
             player.right = True
             player.down = False
             player.up = False
 
-        if keys[pygame.K_w] and player.y > 175:
+        if keys[pygame.K_w] and player.y > 163:
             player.y -= player.speed
             player.left = False
             player.right = False
@@ -1585,28 +1640,28 @@ def levelRestrictions():  # Creating restrictions for each level/screen
             player.up = False
     # boundaries for level 3
     if level_list[0] == 5:
-        if keys[pygame.K_a] and player.x > 0 + 175:
+        if keys[pygame.K_a] and player.x > 0 + 125:
             player.x -= player.speed
             player.left = True
             player.right = False
             player.down = False
             player.up = False
 
-        if keys[pygame.K_d] and player.x < screen_width - player.height - 190:
+        if keys[pygame.K_d] and player.x < screen_width - player.height:
             player.x += player.speed
             player.left = False
             player.right = True
             player.down = False
             player.up = False
 
-        if keys[pygame.K_w] and player.y > 110:
+        if keys[pygame.K_w] and player.y > 58:
             player.y -= player.speed
             player.left = False
             player.right = False
             player.down = False
             player.up = True
 
-        if keys[pygame.K_s] and player.y < 0 + 390:
+        if keys[pygame.K_s] and player.y < 0 + 452:
             player.y += player.speed
             player.left = False
             player.right = False
@@ -1615,7 +1670,7 @@ def levelRestrictions():  # Creating restrictions for each level/screen
     # boundaries for level 4
     if level_list[0] == 6:
 
-        if keys[pygame.K_a] and player.x > 125:
+        if keys[pygame.K_a] and player.x > 145:
             player.x -= player.speed
             player.left = True
             player.right = False
@@ -1629,14 +1684,14 @@ def levelRestrictions():  # Creating restrictions for each level/screen
             player.down = False
             player.up = False
 
-        if keys[pygame.K_w] and player.y > 40:
+        if keys[pygame.K_w] and player.y > 78:
             player.y -= player.speed
             player.left = False
             player.right = False
             player.down = False
             player.up = True
 
-        if keys[pygame.K_s] and player.y < 0 + 500:
+        if keys[pygame.K_s] and player.y < 0 + 439:
             player.y += player.speed
             player.left = False
             player.right = False
@@ -1647,10 +1702,16 @@ def levelRestrictions():  # Creating restrictions for each level/screen
 clock = pygame.time.Clock()  # Will be used to define the FPS (frames per second) of the game
 run = True  # Determines whether the game is running
 
+
 # Game intro screens
 
 
 def game_loop():
+    for frame in range(0, len(intro_frames)):
+        # time.sleep(0.08)  # Intro time
+        win.blit(intro_frames[frame], (0, 0))
+        pygame.display.update()
+
     run = True
     while run:  # While the game is active/running. If run ever = False, end the game.
         global n
@@ -1659,6 +1720,7 @@ def game_loop():
 
         for event in pygame.event.get():  # For each event in the game
             if event.type == pygame.QUIT:  # If game is closed with "X"
+
                 run = False  # End the game
 
             if keys[pygame.K_r]:  # If the r key is pressed
@@ -1686,7 +1748,8 @@ def game_loop():
                         ammoleft -= k
 
             if event.type == pygame.MOUSEBUTTONDOWN:  # If the mouse is clicked
-                if len(player_bullets) < 6:  # If the number of bullets on the screen at any time is less than or equal to six
+                if len(
+                        player_bullets) < 6:  # If the number of bullets on the screen at any time is less than or equal to six
 
                     if len(shots) >= 6:  # If 6 bullets have been shot
                         player.loaded = False  # Gun is no longer loaded with enough bullets to shoot. The player must reload.
@@ -1698,15 +1761,17 @@ def game_loop():
 
                     player.bulletVelCalc()  # Function that starts moving the bullet toward the click's position
 
-        if len(guards) == 0 and level_list[0] == 1:  # If the player is on level 1, start adding guards to the screen
+        if len(guards) == 0 and level_list[0] == 1 and len(
+                guards_killed) < 7:  # If the player is on level 1, start adding guards to the screen
             guards.append(Mob(1200, 255, 82, 61, 'Guard', 10))
 
-        if len(guardTowers) == 0 and level_list[0] == 4:  # If the player is on level 2, start adding towers to the screen
+        if len(guardTowers) == 0 and level_list[0] == 4 and len(
+                guardTowersKilled) < 2:  # If the player is on level 2, start adding towers to the screen
             guardTowers.append(GuardTower(715, 555, 82, 61, 10))
             guardTowers.append(GuardTower(715, 60, 82, 61, 10))
 
         if len(wardens) == 0 and level_list[0] == 5:  # If the player is on level 3, start adding wardens to the screen
-            wardens.append(Warden(980, 300, 82, 61, 'Guard', 10))
+            wardens.append(Warden(980, 300, 82, 61, 'Warden', 20))
 
         g = 0  # Guards start at 0
         gt = 0  # 1st tower
@@ -1717,9 +1782,11 @@ def game_loop():
                 if level_list[0] == 1:  # If the player is on the first level
                     try:
                         # Bullet interaction with guards
-                        if bullet.y - bullet.radius < guards[g].hitbox[1] + guards[g].hitbox[3] and bullet.y + bullet.radius > \
+                        if bullet.y - bullet.radius < guards[g].hitbox[1] + guards[g].hitbox[
+                            3] and bullet.y + bullet.radius > \
                                 guards[g].hitbox[1]:
-                            if bullet.x + bullet.radius > guards[g].hitbox[0] and bullet.x - bullet.radius < guards[g].hitbox[0] + \
+                            if bullet.x + bullet.radius > guards[g].hitbox[0] and bullet.x - bullet.radius < \
+                                    guards[g].hitbox[0] + \
                                     guards[g].hitbox[2]:
 
                                 guards[g].shot()  # Guard loses 1 health
@@ -1729,17 +1796,20 @@ def game_loop():
                                         player_gold[0] = player_gold[0] + 50
                                         guards.pop(guards.index(guard))  # Pop/delete the killed guard
 
-                                player_bullets.pop(player_bullets.index(bullet))  # Delete the player's bullet from the screen
+                                player_bullets.pop(
+                                    player_bullets.index(bullet))  # Delete the player's bullet from the screen
                     except IndexError:
                         pass
 
                 if level_list[0] == 4:  # If the player is on the second level
                     try:
                         # Bullet interaction with 1st guard tower
-                        if bullet.y - bullet.radius < guardTowers[gt].hitbox[1] + guardTowers[gt].hitbox[3] and bullet.y + bullet.radius > \
+                        if bullet.y - bullet.radius < guardTowers[gt].hitbox[1] + guardTowers[gt].hitbox[
+                            3] and bullet.y + bullet.radius > \
                                 guardTowers[gt].hitbox[1]:
-                            if bullet.x + bullet.radius > guardTowers[gt].hitbox[0] and bullet.x - bullet.radius < guardTowers[gt].hitbox[
-                                0] + \
+                            if bullet.x + bullet.radius > guardTowers[gt].hitbox[0] and bullet.x - bullet.radius < \
+                                    guardTowers[gt].hitbox[
+                                        0] + \
                                     guardTowers[gt].hitbox[2]:
 
                                 guardTowers[gt].shot()  # Tower loses 1 health
@@ -1747,13 +1817,16 @@ def game_loop():
                                     guardTowersKilled.append([])  # Add to the number of towers killed
                                     guardTowers.pop(gt)  # Pop/delete the killed tower
 
-                                player_bullets.pop(player_bullets.index(bullet))  # Delete the player's bullet from the screen
+                                player_bullets.pop(
+                                    player_bullets.index(bullet))  # Delete the player's bullet from the screen
 
                         # Bullet interaction with 2nd guard tower
-                        if bullet.y - bullet.radius < guardTowers[gt_2].hitbox[1] + guardTowers[gt_2].hitbox[3] and bullet.y + bullet.radius > \
+                        if bullet.y - bullet.radius < guardTowers[gt_2].hitbox[1] + guardTowers[gt_2].hitbox[
+                            3] and bullet.y + bullet.radius > \
                                 guardTowers[gt_2].hitbox[1]:
-                            if bullet.x + bullet.radius > guardTowers[gt_2].hitbox[0] and bullet.x - bullet.radius < guardTowers[gt_2].hitbox[
-                                0] + \
+                            if bullet.x + bullet.radius > guardTowers[gt_2].hitbox[0] and bullet.x - bullet.radius < \
+                                    guardTowers[gt_2].hitbox[
+                                        0] + \
                                     guardTowers[gt_2].hitbox[2]:
 
                                 guardTowers[gt_2].shot()  # Tower loses 1 health
@@ -1761,7 +1834,8 @@ def game_loop():
                                     guardTowersKilled.append([])  # Add to the number of towers killed
                                     guardTowers.pop(gt_2)  # Pop/delete the killed tower
 
-                                player_bullets.pop(player_bullets.index(bullet))  # Delete the player's bullet from the screen
+                                player_bullets.pop(
+                                    player_bullets.index(bullet))  # Delete the player's bullet from the screen
 
                     except IndexError:
                         pass
@@ -1770,9 +1844,11 @@ def game_loop():
                     try:
 
                         # Bullet interaction with the warden
-                        if bullet.y - bullet.radius < wardens[g].hitbox[1] + wardens[g].hitbox[3] and bullet.y + bullet.radius > \
+                        if bullet.y - bullet.radius < wardens[g].hitbox[1] + wardens[g].hitbox[
+                            3] and bullet.y + bullet.radius > \
                                 wardens[g].hitbox[1]:
-                            if bullet.x + bullet.radius > wardens[g].hitbox[0] and bullet.x - bullet.radius < wardens[g].hitbox[0] + \
+                            if bullet.x + bullet.radius > wardens[g].hitbox[0] and bullet.x - bullet.radius < \
+                                    wardens[g].hitbox[0] + \
                                     wardens[g].hitbox[2]:
 
                                 wardens[g].shot()  # Warden loses 1 health
@@ -1781,7 +1857,8 @@ def game_loop():
                                         wardens_killed.append([])  # Add to the number of wardens killed
                                         wardens.pop(wardens.index(warden))  # Pop/delete the killed warden
 
-                                player_bullets.pop(player_bullets.index(bullet))  # Delete the player's bullet from the screen
+                                player_bullets.pop(
+                                    player_bullets.index(bullet))  # Delete the player's bullet from the screen
                     except IndexError:
                         pass
 
@@ -1814,6 +1891,7 @@ def game_loop():
         levelRestrictions()  # Call the screen restriction for the level
         redraw()  # Call the redraw function to update the screen
         clock.tick(60)  # 60 FPS
+
 
 game_intro()
 pygame.quit()  # End the game
