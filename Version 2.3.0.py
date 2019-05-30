@@ -471,6 +471,7 @@ def shop3():     # vest
                 elif buy.isOver(pos):
                     if player_gold[0] - 250 >= 0:
                         player_gold[0] -= 250
+                        player.health += 10
                         global weapon
                         weapon = 3
                         print("Item Bought")
