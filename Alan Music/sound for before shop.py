@@ -17,8 +17,11 @@ grey = (210, 210, 210)
 bsound = pygame.mixer.Sound("Button1.wav")
 cashout = pygame.mixer.Sound("Button1.wav")
 selfdmg = pygame.mixer.Sound("selfdmg.wav")
-reloadsound = pygame.mixer.Sound("reloadsound.wav")
+reloadsound = pygame.mixer.Sound("reload.wav")
 gunsound = pygame.mixer.Sound("gunsound.wav")
+purchasesound = pygame.mixer.Sound("purchasesound.wav")
+nocoinsound = pygame.mixer.Sound("nocoinsound.wav")
+shopselect = pygame.mixer.Sound("shopselect.wav")
 
 # defining different fonts which will be used in a function that allows us to display text in our game
 smallfont = pygame.font.SysFont("comicsansms", 25)  # Small Comic Sans font
@@ -222,7 +225,6 @@ def startbuttons():
                     bsound.play()
                     print("Instructions")
                     infobutton()
-
             if event.type == pygame.MOUSEMOTION:
                 if greyButton1.isOver(pos):
                     greyButton1.color = red
@@ -277,9 +279,11 @@ def shop():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if shopButton1.isOver(pos):
+                    bsound.play()
                     shop1()
 
                 if shopButton2.isOver(pos):
+                    bsound.play()
                     player.x = 75
                     player.y = 255
 
@@ -308,6 +312,7 @@ def shop1():    #ak47
     global run
     while run:
         shopak47()
+
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -320,27 +325,34 @@ def shop1():    #ak47
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if greyButton3.isOver(pos):
-                    shop()
                     bsound.play()
+                    shop()
                 elif buy.isOver(pos):
+
                     if player_gold[0] - 250 >= 0:
                         player_gold[0] -= 250
                         global weapon
                         weapon = 1
+                        purchasesound.play()
                         print("Item Bought")
                     else:
                         message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium" )
+                        nocoinsound.play()
                         pygame.display.update()
                         time.sleep(1)
                         pygame.display.update()
                 elif sniperbut.isOver(pos):
                     shop2()
+                    shopselect.play()
                 elif vestbut.isOver(pos):
                     shop3()
+                    shopselect.play()
                 elif ammobut.isOver(pos):
                     shop4()
+                    shopselect.play()
                 elif lockedbut.isOver(pos):
                     shop5()
+                    shopselect.play()
                 else:
                     pass
 
@@ -382,26 +394,32 @@ def shop2():     # sniper
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if greyButton3.isOver(pos):
-                    shop()
                     bsound.play()
+                    shop()
                 elif buy.isOver(pos):
                     if player_gold[0] - 250 >= 0:
                         player_gold[0] -= 250
                         global weapon
                         weapon = 2
+                        purchasesound.play()
                         print("Item Bought")
                     else:
                         message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium" )
+                        nocoinsound.play()
                         pygame.display.update()
                         time.sleep(1)
                         pygame.display.update()
                 elif ak47but.isOver(pos):
+                    shopselect.play()
                     shop1()
                 elif vestbut.isOver(pos):
+                    shopselect.play()
                     shop3()
                 elif ammobut.isOver(pos):
+                    shopselect.play()
                     shop4()
                 elif lockedbut.isOver(pos):
+                    shopselect.play()
                     shop5()
                 else:
                     pass
@@ -444,26 +462,32 @@ def shop3():     # vest
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if greyButton3.isOver(pos):
-                    shop()
                     bsound.play()
+                    shop()
                 elif buy.isOver(pos):
                     if player_gold[0] - 250 >= 0:
                         player_gold[0] -= 250
                         global weapon
                         weapon = 3
+                        purchasesound.play()
                         print("Item Bought")
                     else:
                         message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium" )
+                        nocoinsound.play()
                         pygame.display.update()
                         time.sleep(1)
                         pygame.display.update()
                 elif ak47but.isOver(pos):
+                    shopselect.play()
                     shop1()
                 elif sniperbut.isOver(pos):
+                    shopselect.play()
                     shop2()
                 elif ammobut.isOver(pos):
+                    shopselect.play()
                     shop4()
                 elif lockedbut.isOver(pos):
+                    shopselect.play()
                     shop5()
                 else:
                     pass
@@ -506,8 +530,8 @@ def shop4():  # ammo
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if greyButton3.isOver(pos):
-                    shop()
                     bsound.play()
+                    shop()
                 elif buy.isOver(pos):
                     if player_gold[0] - 50 >= 0:
                         player_gold[0] -= 50
@@ -519,18 +543,24 @@ def shop4():  # ammo
                         else:
                             ammoleft += 50
                         print("Item Bought")
+                        purchasesound.play()
                     else:
                         message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium" )
+                        nocoinsound.play()
                         pygame.display.update()
                         time.sleep(1)
                         pygame.display.update()
                 elif ak47but.isOver(pos):
+                    shopselect.play()
                     shop1()
                 elif sniperbut.isOver(pos):
+                    shopselect.play()
                     shop2()
                 elif vestbut.isOver(pos):
+                    shopselect.play()
                     shop3()
                 elif lockedbut.isOver(pos):
+                    shopselect.play()
                     shop5()
                 else:
                     pass
@@ -573,17 +603,22 @@ def shop5():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if greyButton3.isOver(pos):
-                    shop()
                     bsound.play()
+                    shop()
                 elif buy.isOver(pos):
                     print("Item Bought")
+                    purchasesound.play()
                 elif ak47but.isOver(pos):
+                    shopselect.play()
                     shop1()
                 elif sniperbut.isOver(pos):
+                    shopselect.play()
                     shop2()
                 elif vestbut.isOver(pos):
+                    shopselect.play()
                     shop3()
                 elif ammobut.isOver(pos):
+                    shopselect.play()
                     shop4()
                 else:
                     pass
@@ -646,10 +681,10 @@ class Character(pygame.sprite.Sprite):
         self.up = False
 
         # Loading images for each direction
-        self.lookUp = pygame.image.load(self.name + '0.png')
-        self.lookDown = pygame.image.load(self.name + '180.png')
-        self.lookLeft = pygame.image.load(self.name + '270.png')
-        self.lookRight = pygame.image.load(self.name + '90.png')
+        self.lookUp = pygame.image.load(self.name + '90.png')
+        self.lookDown = pygame.image.load(self.name + '270.png')
+        self.lookLeft = pygame.image.load(self.name + '180.png')
+        self.lookRight = pygame.image.load(self.name + '0.png')
         self.lookIdle = pygame.image.load(self.name + '0.png')
 
         # Defining the center for the character
@@ -773,6 +808,7 @@ class Player(Character, pygame.sprite.Sprite):  # Class that defines the player/
                         if clicks[s][0] >= (self.x + self.height / 2 + self.width / 2) - 200:
                             if clicks[s][0] <= (self.x + self.height / 2 + self.width / 2) + 200:
                                 player_bullets.append(Bullet(self.x + 7, self.y))  # Create the bullet
+                                gunsound.play()
                                 self.bullet_velocity(7, 0)  # Give the bullet its velocity
                                 # Add an element to the shots list that determines if the gun is loaded
                                 shots.append([])
@@ -802,7 +838,6 @@ class Player(Character, pygame.sprite.Sprite):  # Class that defines the player/
                         if clicks[s][1] >= (self.y + self.height / 2 + self.width / 2) - 200:
                             if clicks[s][1] <= (self.y + self.height / 2 + self.width / 2) + 200:
                                 player_bullets.append(Bullet(self.x + 57, self.y + 7))  # Create the bullet
-                                gunsound.play()
                                 self.bullet_velocity(57, 7)  # Give the bullet its velocity
                                 # Add an element to the shots list that determines if the gun is loaded
                                 shots.append([])
@@ -1321,17 +1356,17 @@ player = Player(200, 255, 83, 55, 'player', 10)  # Defining the player by using 
 level_list = [1, 0]  # Creating a list that is used to indicate which level the player is on
 
 if level_list[0] == 1:  # If level 1
-    level_list[1] = pygame.image.load("level_1.png")  # Level image sent to list
     pygame.mixer.music.set_volume(0.5)
     pygame.mixer.music.load('intro.mp3')
     pygame.mixer.music.play(-1)
+    level_list[1] = pygame.image.load("level_1.png")  # Level image sent to list
 
 player_gold = [0]
 
 
 def redraw():  # Function used to draw to the screen
 
-    if level_list[0] == 1 and len(guards_killed) >= 6:  # If player is on the first level and has cleared all of the enemies
+    if level_list[0] == 1: # and len(guards_killed) >= 6:  # If player is on the first level and has cleared all of the enemies
         if player.x == 1100:  # If player reaches the right side of the screen, send him back to the left side
             player.x = 75
             player.y = 255
@@ -1349,7 +1384,7 @@ def redraw():  # Function used to draw to the screen
             pass
 
     if level_list[0] == 2:  # If player is on the first level and has cleared all of the enemies
-        if player.x == 920:  # If player reaches the right side of the screen, send him back to the left side
+        if player.x == 950:  # If player reaches the right side of the screen, send him back to the left side
             player.x = 75
             player.y = 255
 
@@ -1647,6 +1682,7 @@ def game_loop():
     run = True
     while run:  # While the game is active/running. If run ever = False, end the game.
         global n
+
         keys = pygame.key.get_pressed()  # Variable that defines a key press
 
         for event in pygame.event.get():  # For each event in the game
@@ -1654,7 +1690,7 @@ def game_loop():
                 run = False  # End the game
 
             if keys[pygame.K_r]:  # If the r key is pressed
-                reloadsound.play() # Plays sound for gun reloading
+                reloadsound.play()
                 del shots[:]  # Clear the list that counts the number of shots made
                 player.loaded = True  # Insures that the character is loaded to shoot
                 global ammoleft
@@ -1679,14 +1715,12 @@ def game_loop():
 
             if event.type == pygame.MOUSEBUTTONDOWN:  # If the mouse is clicked
                 if len(player_bullets) < 6:  # If the number of bullets on the screen at any time is less than or equal to six
-                   # gunsound.play()
+
                     if len(shots) >= 6:  # If 6 bullets have been shot
                         player.loaded = False  # Gun is no longer loaded with enough bullets to shoot. The player must reload.
-                        pygame.mixer.pause()
 
                         if weapon == 1:
                             player.loaded = True
-
                         else:
                             pass
 
@@ -1717,7 +1751,6 @@ def game_loop():
                                     guards[g].hitbox[2]:
 
                                 guards[g].shot()  # Guard loses 1 health
-                                selfdmg.play()
                                 for guard in guards:  # For each guard
                                     if guards[g].health == 0:  # If the guard has 0 health
                                         guards_killed.append([])  # Add to the number of guards killed
