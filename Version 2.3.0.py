@@ -340,11 +340,18 @@ def shop1():    #ak47
                 if greyButton3.isOver(pos):
                     shop()
                 elif buy.isOver(pos):
+                    global ammoleft
+                    global weapon
                     if player_gold[0] - 250 >= 0:
-                        player_gold[0] -= 250
-                        global weapon
-                        weapon = 1
-                        print("Item Bought")
+                        if weapon == 11:
+                            player_gold[0] -= 250
+                            weapon = 1
+                            print("Item Bought")
+                            stock[0] += ammoleft
+                            ammoleft = 0
+                        else:
+                            player_gold[0] -= 250
+                            weapon = 1
                     else:
                         message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium" )
                         pygame.display.update()
@@ -382,7 +389,7 @@ def shop1():    #ak47
                     ammobut.color = grey
                     lockedbut.color = grey
 
-
+                    
 def shop2():     # sniper
     global run
     while run:
@@ -525,6 +532,7 @@ def shop4():  # ammo
                 elif buy.isOver(pos):
                     if player_gold[0] - 50 >= 0:
                         player_gold[0] -= 50
+                        global weapon
                         if weapon == 1:
                             global ammoleft
                             stock[0] += ammoleft
@@ -532,6 +540,7 @@ def shop4():  # ammo
                             ammoleft = 0
                         else:
                             ammoleft += 50
+                            weapon = 11
                         print("Item Bought")
                     else:
                         message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium" )
@@ -570,7 +579,7 @@ def shop4():  # ammo
                     vestbut.color = grey
                     lockedbut.color = grey
 
-
+                    
 def shop5():
     global run
     while run:
@@ -1338,9 +1347,7 @@ player_gold = [0]
 
 def redraw():  # Function used to draw to the screen
 
-
-
-    if level_list[0] == 1 and len(guards_killed) >= 6:  # If player is on the first level and has cleared all of the enemies
+    if level_list[0] == 1: # and len(guards_killed) >= 6:  # If player is on the first level and has cleared all of the enemies
         if player.x == 1100:  # If player reaches the right side of the screen, send him back to the left side
             player.x = 75
             player.y = 255
@@ -1358,7 +1365,7 @@ def redraw():  # Function used to draw to the screen
             pass
 
     if level_list[0] == 2:  # If player is on the first level and has cleared all of the enemies
-        if player.x == 920:  # If player reaches the right side of the screen, send him back to the left side
+        if player.x == 970:  # If player reaches the right side of the screen, send him back to the left side
             player.x = 75
             player.y = 255
 
@@ -1379,7 +1386,7 @@ def redraw():  # Function used to draw to the screen
 
     if level_list[0] == 4 and len(guardTowersKilled) >= 2:  # If player is on the second level and has cleared all of the enemies
 
-        if player.x == 900:  # If player reaches the right side of the screen, send him back to the left side
+        if player.x == 1050:  # If player reaches the right side of the screen, send him back to the left side
             player.x = 75
             player.y = 255
 
@@ -1394,9 +1401,9 @@ def redraw():  # Function used to draw to the screen
 
     if level_list[0] == 5 and len(wardens_killed) >= 1:  # If player is on the third level and has cleared all of the enemies
 
-        if player.x == 900:  # If player reaches the right side of the screen, send him back to the left side
-            player.x = 75
-            player.y = 255
+        if player.x == 1050:  # If player reaches the right side of the screen, send him back to the left side
+            player.x = 255
+            player.y = 100
 
             level_list[0] += 1  # Increase the level number
             level_list[1] = pygame.image.load("level_" + str(level_list[0]) + ".png")  # Level image sent to list
@@ -1413,7 +1420,6 @@ def redraw():  # Function used to draw to the screen
             # Show "You Win" text on the screen
             message_to_screen("You won", green, player.x, player.y, size="medium")
             pygame.display.update()
-
             # Wait 3 seconds then close the game
             time.sleep(3)
             times_ran_outro = 0
@@ -1493,14 +1499,14 @@ def levelRestrictions():  # Creating restrictions for each level/screen
             player.down = False
             player.up = False
 
-        if keys[pygame.K_w] and player.y > 205:
+        if keys[pygame.K_w] and player.y > 148:
             player.y -= player.speed
             player.left = False
             player.right = False
             player.down = False
             player.up = True
 
-        if keys[pygame.K_s] and player.y < 0 + 330:
+        if keys[pygame.K_s] and player.y < 0 + 383:
             player.y += player.speed
             player.left = False
             player.right = False
@@ -1508,7 +1514,7 @@ def levelRestrictions():  # Creating restrictions for each level/screen
             player.up = False
 
     if level_list[0] == 2:
-        if keys[pygame.K_a] and player.x > 0 + 4:
+        if keys[pygame.K_a] and player.x > 0 + 46:
             player.x -= player.speed
             player.left = True
             player.right = False
@@ -1522,65 +1528,37 @@ def levelRestrictions():  # Creating restrictions for each level/screen
             player.down = False
             player.up = False
 
-        if keys[pygame.K_w] and player.y > 205:
+        if keys[pygame.K_w] and player.y > 65:
             player.y -= player.speed
             player.left = False
             player.right = False
             player.down = False
             player.up = True
 
-        if keys[pygame.K_s] and player.y < 0 + 330:
+        if keys[pygame.K_s] and player.y < 0 + 454:
             player.y += player.speed
             player.left = False
             player.right = False
             player.down = True
             player.up = False
 
-    if level_list[0] == 3:
-        if keys[pygame.K_a] and player.x > 0 + 4:
-            player.x -= player.speed
-            player.left = True
-            player.right = False
-            player.down = False
-            player.up = False
-
-        if keys[pygame.K_d] and player.x < screen_width - player.height - 25:
-            player.x += player.speed
-            player.left = False
-            player.right = True
-            player.down = False
-            player.up = False
-
-        if keys[pygame.K_w] and player.y > 205:
-            player.y -= player.speed
-            player.left = False
-            player.right = False
-            player.down = False
-            player.up = True
-
-        if keys[pygame.K_s] and player.y < 0 + 330:
-            player.y += player.speed
-            player.left = False
-            player.right = False
-            player.down = True
-            player.up = False
     # boundaries for level 2
     if level_list[0] == 4:
-        if keys[pygame.K_a] and player.x > 0 + 215:
+        if keys[pygame.K_a] and player.x > 0 + 130:
             player.x -= player.speed
             player.left = True
             player.right = False
             player.down = False
             player.up = False
 
-        if keys[pygame.K_d] and player.x < screen_width - player.height - 225:
+        if keys[pygame.K_d] and player.x < screen_width - player.height:
             player.x += player.speed
             player.left = False
             player.right = True
             player.down = False
             player.up = False
 
-        if keys[pygame.K_w] and player.y > 175:
+        if keys[pygame.K_w] and player.y > 163:
             player.y -= player.speed
             player.left = False
             player.right = False
@@ -1595,28 +1573,28 @@ def levelRestrictions():  # Creating restrictions for each level/screen
             player.up = False
     # boundaries for level 3
     if level_list[0] == 5:
-        if keys[pygame.K_a] and player.x > 0 + 175:
+        if keys[pygame.K_a] and player.x > 0 + 125:
             player.x -= player.speed
             player.left = True
             player.right = False
             player.down = False
             player.up = False
 
-        if keys[pygame.K_d] and player.x < screen_width - player.height - 190:
+        if keys[pygame.K_d] and player.x < screen_width - player.height:
             player.x += player.speed
             player.left = False
             player.right = True
             player.down = False
             player.up = False
 
-        if keys[pygame.K_w] and player.y > 110:
+        if keys[pygame.K_w] and player.y > 58:
             player.y -= player.speed
             player.left = False
             player.right = False
             player.down = False
             player.up = True
 
-        if keys[pygame.K_s] and player.y < 0 + 390:
+        if keys[pygame.K_s] and player.y < 0 + 452:
             player.y += player.speed
             player.left = False
             player.right = False
@@ -1625,7 +1603,7 @@ def levelRestrictions():  # Creating restrictions for each level/screen
     # boundaries for level 4
     if level_list[0] == 6:
 
-        if keys[pygame.K_a] and player.x > 125:
+        if keys[pygame.K_a] and player.x > 145:
             player.x -= player.speed
             player.left = True
             player.right = False
@@ -1639,20 +1617,19 @@ def levelRestrictions():  # Creating restrictions for each level/screen
             player.down = False
             player.up = False
 
-        if keys[pygame.K_w] and player.y > 40:
+        if keys[pygame.K_w] and player.y > 78:
             player.y -= player.speed
             player.left = False
             player.right = False
             player.down = False
             player.up = True
 
-        if keys[pygame.K_s] and player.y < 0 + 500:
+        if keys[pygame.K_s] and player.y < 0 + 439:
             player.y += player.speed
             player.left = False
             player.right = False
             player.down = True
             player.up = False
-
 
 clock = pygame.time.Clock()  # Will be used to define the FPS (frames per second) of the game
 run = True  # Determines whether the game is running
