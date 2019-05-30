@@ -15,7 +15,6 @@ grey = (210, 210, 210)
 
 # Defining sounds
 bsound = pygame.mixer.Sound("Button1.wav")
-cashout = pygame.mixer.Sound("Button1.wav")
 selfdmg = pygame.mixer.Sound("selfdmg.wav")
 reloadsound = pygame.mixer.Sound("reload.wav")
 gunsound = pygame.mixer.Sound("gunsound.wav")
