@@ -506,7 +506,7 @@ def shop3():  # vest
                         player_gold[0] -= 250
                         global weapon
                         weapon = 3
-
+                        player.health += 10
                         purchasesound.play()
                     else:
                         message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")
