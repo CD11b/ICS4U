@@ -11,8 +11,8 @@ import pygame
 import time  # Imported to pause the game before exiting
 from math import atan2, sin, cos  # Imported to calculate bullet to player angles
 
-weapon = 0
-ammoleft = 96
+weapon = 0     # sets a variable for weapon which will change when the player purchases different weapons
+ammoleft = 96   # number of ammo the player has at the start of the game
 able = True
 pygame.init()  # Initialize all imported Pygame modules
 pygame.mixer.init()
@@ -66,7 +66,7 @@ def message_to_screen(msg, color, x, y, size):  # Used to show text on the scree
     win.blit(textsurf, textrect)
 
 
-# Shop images
+# Shop images: load different images for different scenes in the Shop
 start = pygame.image.load('EnvImages/start.png')
 info = pygame.image.load('EnvImages/info.png')
 ak47 = pygame.image.load("EnvImages/AK47.png")
@@ -191,7 +191,7 @@ def shopak47():
     vestbut.draw(win, black)
     ammobut.draw(win, black)
     lockedbut.draw(win, black)
-    message_to_screen("Coins: " + str(player_gold[0]), white, 130, 75, "small")
+    message_to_screen("Coins: " + str(player_gold[0]), white, 130, 75, "small")   # lets the player know how much coins/bullets they have
     message_to_screen("Bullets left: " + str(stock[0]) + "/" + str(ammoleft), white, 1050, 75, "small")
     pygame.display.update()
 
@@ -263,6 +263,7 @@ lockedbut = button(grey, 875, 522, 320, 74, 'LOCKED')
 buy = button(grey, 475, 500, 250, 100, 'BUY')
 
 
+# the starting page for the game
 def startbuttons():
     global run
     while run:
@@ -277,7 +278,7 @@ def startbuttons():
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:    # checks if the player clicks on any of the buttons
                 if greyButton1.isOver(pos):
                     bsound.play()
 
@@ -286,8 +287,8 @@ def startbuttons():
                     bsound.play()
 
                     infobutton()
-            if event.type == pygame.MOUSEMOTION:
-                if greyButton1.isOver(pos):
+            if event.type == pygame.MOUSEMOTION:    # checks if the player has the mouse over any of the buttons
+                if greyButton1.isOver(pos):         # the buttons changes color if the mouse is over it
                     greyButton1.color = red
 
                 elif greyButton2.isOver(pos):
@@ -313,10 +314,10 @@ def infobutton():
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:    
                 if greyButton3.isOver(pos):
                     bsound.play()
-                    startbuttons()
+                    startbuttons()    # if the player clicks "back" it brings them back to te starting menu
             if event.type == pygame.MOUSEMOTION:
                 if greyButton3.isOver(pos):
                     greyButton3.color = green
@@ -340,12 +341,12 @@ def shop():
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN: 
                 if shopButton1.isOver(pos):
                     bsound.play()
                     shop1()
 
-                if shopButton2.isOver(pos):
+                if shopButton2.isOver(pos):   # if the player exits the shop, it brings them to the next level
                     bsound.play()
                     player.x = 75
                     player.y = 255
@@ -360,10 +361,10 @@ def shop():
                     player.down = False
                     player.up = False
                     run = False
-            if event.type == pygame.MOUSEMOTION:
+            if event.type == pygame.MOUSEMOTION:  # make the buttons change to a different colour when the mouse is over them
                 if shopButton1.isOver(pos):
                     shopButton1.color = green
-                elif shopButton2.isOver(pos):
+                elif shopButton2.isOver(pos): 
                     shopButton2.color = red
 
                 else:
