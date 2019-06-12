@@ -1,3 +1,12 @@
+###########################################################
+#Author: Abbodi Baw, Alan Lin, Gregory Mahmoudpour, Jesse #
+#Xue                                                      #
+#Revision Date: May 31st, 2019                            #
+#Program Name: ReRun                                      #
+#Program Description: Main game                           #
+###########################################################
+
+
 import pygame
 import time  # Imported to pause the game before exiting
 from math import atan2, sin, cos  # Imported to calculate bullet to player angles
@@ -57,7 +66,7 @@ def message_to_screen(msg, color, x, y, size):  # Used to show text on the scree
     win.blit(textsurf, textrect)
 
 
-
+# Shop images
 start = pygame.image.load('EnvImages/start.png')
 info = pygame.image.load('EnvImages/info.png')
 ak47 = pygame.image.load("EnvImages/AK47.png")
@@ -66,6 +75,17 @@ sniper = pygame.image.load('EnvImages/Sniper.png')
 vest = pygame.image.load('EnvImages/Vest.png')
 locked = pygame.image.load('EnvImages/Locked.png')
 
+
+# Loading story animation
+story_frame_number = 0
+story_frames = []
+
+while story_frame_number <= 25:
+    pygame.event.pump()
+    story_frame_number += 1
+    story_frames.append(pygame.image.load("Story/" + str(story_frame_number) + ".png"))
+
+# Loading intro animation
 intro_frame_number = 0
 intro_frames = []
 while intro_frame_number <= 359:
@@ -78,6 +98,8 @@ while intro_frame_number <= 359:
     else:
         intro_frames.append(pygame.image.load("IntroGifs/frame_" + str(intro_frame_number) + "_delay-0.04s.gif"))
 
+
+# Loading outro animation
 outro_frame_number = 0
 outro_frames = []
 while outro_frame_number <= 53:
@@ -91,6 +113,7 @@ while outro_frame_number <= 53:
         pass
 
 
+# Game over screen
 def gameOver():
     GameOver = pygame.image.load("EnvImages/gameover.png")
     pygame.event.pump()
@@ -100,12 +123,14 @@ def gameOver():
     pygame.quit()
 
 
+# Game intro screens
 def game_intro():
     startbuttons()
     infobutton()
     pygame.display.update()
 
 
+# Defining a button
 class button():
     def __init__(self, color, x, y, width, height, text=''):
         self.color = color
@@ -136,13 +161,13 @@ class button():
 
         return False
 
-
+# Buttons on the first screen
 def bottons():
     win.blit(start, (0, 0))
     greyButton1.draw(win, black)
     greyButton2.draw(win, black)
 
-
+# Buttons on the instructions screen
 def instruction():
     win.blit(info, (0, 0))
     greyButton3.draw(win, black)
@@ -150,14 +175,14 @@ def instruction():
 
 level3 = pygame.image.load("EnvImages/Level_3.png")
 
-
+# Open/Close shop buttons
 def shopBut():
     win.blit(level3, (0, 0))
     shopButton1.draw(win, black)
     shopButton2.draw(win, black)
     pygame.display.update()
 
-
+# Buttons to buy all of the 5 items
 def shopak47():
     win.blit(ak47, (0, 0))
     greyButton3.draw(win, black)
@@ -223,6 +248,7 @@ def shoplocked():
     pygame.display.update()
 
 
+# Defining where all of the buttons in the shop are (positions)
 run = True
 greyButton1 = button(grey, 116, 416, 250, 100, 'Start')
 greyButton2 = button(grey, 738, 418, 250, 100, 'Info')
@@ -272,6 +298,7 @@ def startbuttons():
                     greyButton2.color = grey
 
 
+# Button to see instructions
 def infobutton():
     global run
     while run:
@@ -298,6 +325,7 @@ def infobutton():
                     greyButton3.color = grey
 
 
+# Opening the shop on level 3
 def shop():
     global run
     while run:
@@ -1149,6 +1177,7 @@ class GuardTower(pygame.sprite.Sprite):
                         gameOver()
 
                     guardTowerBullets.pop(guardTowerBullets.index(bullet))
+                    selfdmg.play()
 
             # If the bullet leaves the screen, pop the bullet
             if screen_width > bullet.x > 0:
@@ -1332,6 +1361,7 @@ class Warden(Character, pygame.sprite.Sprite):  # Class that defines the warden
 
                     # Pop/delete the bullet after it hits a player
                     warden_bullets.pop(warden_bullets.index(bullet))
+                    selfdmg.play()
 
             if screen_width > bullet.x > 0:
 
@@ -1390,6 +1420,8 @@ def guardsKilled():  # Function that shows how many enemy players have been kill
             message_to_screen("Bullets left: 0/" + str(ammoleft), red, 1090, 580, "small")
     if level_list[0] == 1:  # Guards
         message_to_screen("Guards Killed: " + str(len(guards_killed)) + "/7", red, 1090, 20, "small")
+    if level_list[0] == 2:  # Guards
+        message_to_screen("Corrupt Guard", black, 600, 50, "medium")
 
     if level_list[0] == 4:  # Towers
         message_to_screen("Guards Towers Killed: " + str(len(guardTowersKilled)) + "/2", red, 1050, 20, "small")
@@ -1412,7 +1444,6 @@ player_gold = [0]
 
 
 def redraw():  # Function used to draw to the screen
-    print(player.health)
     if level_list[0] == 1 and len(guards_killed) >= 6:  # If player is on the first level and has cleared all of the enemies
         if player.x == 1100:  # If player reaches the right side of the screen, send him back to the left side
             player.x = 75
@@ -1509,6 +1540,7 @@ def redraw():  # Function used to draw to the screen
 
     message_to_screen("Coins: " + str(player_gold[0]), red, 800, 20, "small")
     guardsKilled()  # Function that shows how many enemies the player has killed on the top right of the screen
+
     for guard in guards:  # For each guard
         if len(guards_killed) <= 6 and level_list[
             0] == 1:  # Insure that the player has yet to clear all of the enemies on the 1st level
@@ -1709,13 +1741,51 @@ run = True  # Determines whether the game is running
 
 # Game intro screens
 
-
+story_done = []
+story_done.append([])
+story_done.append([])
 def game_loop():
+
+
+    # Playing the story and intro animations
+    if story_done[0] != 1:
+        for frame in range(0, len(story_frames)):
+            pygame.event.pump()
+            message_to_screen("Press any key to skip", red, 600, 20, "small")
+            pygame.display.update()
+            if frame == 0:
+                time.sleep(0.001)
+                win.blit(story_frames[frame], (0, 0))
+                pygame.display.update()
+            if story_done[0] != 1:
+                time.sleep(3)  # Intro time
+                win.blit(story_frames[frame], (0, 0))
+                pygame.display.update()
+                for event in pygame.event.get():  # For each event in the gam
+                    if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:  # If the space key is pressed:
+                        story_done[0] = 1
+
+            if frame == 25:
+                story_done[0] = 1
+
+            else:
+                pass
+
+
     for frame in range(0, len(intro_frames)):
-        pygame.event.pump()
-        time.sleep(0.05)  # Intro time
-        win.blit(intro_frames[frame], (0, 0))
+        message_to_screen("Press any key to skip", red, 600, 20, "small")
         pygame.display.update()
+        if story_done[1] != 1:
+            pygame.event.pump()
+            time.sleep(0.05)  # Intro time
+            win.blit(intro_frames[frame], (0, 0))
+            pygame.display.update()
+            for event in pygame.event.get():  # For each event in the gam
+                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:  # If the space key is pressed:
+                    story_done[1] = 1
+
+            if frame == 359:
+                story_done[1] = 1
 
     run = True
     while run:  # While the game is active/running. If run ever = False, end the game.
@@ -1775,7 +1845,7 @@ def game_loop():
             guardTowers.append(GuardTower(715, 555, 82, 61, 10))
             guardTowers.append(GuardTower(715, 60, 82, 61, 10))
 
-        if len(wardens) == 0 and level_list[0] == 5:  # If the player is on level 3, start adding wardens to the screen
+        if len(wardens) == 0 and level_list[0] == 5 and len(wardens_killed) < 1:  # If the player is on level 3, start adding wardens to the screen
             wardens.append(Warden(980, 300, 82, 61, 'Warden', 20))
 
         g = 0  # Guards start at 0
