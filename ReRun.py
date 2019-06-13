@@ -185,9 +185,9 @@ def shopBut():
 # Buttons to buy all of the 5 items
 def shopak47():
     win.blit(ak47, (0, 0))
-    greyButton3.draw(win, black)
+    greyButton3.draw(win, black)   
     buy.draw(win, black)
-    sniperbut.draw(win, black)
+    sniperbut.draw(win, black)    # buttons that allow players to check different weapons
     vestbut.draw(win, black)
     ammobut.draw(win, black)
     lockedbut.draw(win, black)
@@ -393,24 +393,24 @@ def shop1():  # ak47
                 elif buy.isOver(pos):
                     global ammoleft
                     global weapon
-                    if player_gold[0] - 250 >= 0:
+                    if player_gold[0] - 250 >= 0:   # checks if the player has enough money to buy the weapon
                         if weapon == 11:
                             player_gold[0] -= 250
-                            weapon = 1
+                            weapon = 1       # changes the variable for weapon, and the player does not need to reload anymore
                             purchasesound.play()
 
-                            stock[0] += ammoleft
-                            ammoleft = 0
+                            stock[0] += ammoleft   # merges all ammo together(x/y -----> x+y/0)
+                            ammoleft = 0           # x is the ammo in the gun, and y is the ammo in stock
                         else:
                             player_gold[0] -= 250
                             weapon = 1
                     else:
-                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")
+                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")  # informs the player if they don't have enought coins
                         pygame.display.update()
                         nocoinsound.play()
                         time.sleep(1)
                         pygame.display.update()
-                elif sniperbut.isOver(pos):
+                elif sniperbut.isOver(pos):      # allows the player to click on other buttons to see the rest of weapons
                     shop2()
                     shopselect.play()
                 elif vestbut.isOver(pos):
@@ -425,7 +425,7 @@ def shop1():  # ak47
                 else:
                     pass
 
-            if event.type == pygame.MOUSEMOTION:
+            if event.type == pygame.MOUSEMOTION:    # changes the colour of the buttons if the mouse is over them
                 if greyButton3.isOver(pos):
                     greyButton3.color = green
                 elif buy.isOver(pos):
@@ -466,10 +466,10 @@ def shop2():  # sniper
                     bsound.play()
                     shop()
                 elif buy.isOver(pos):
-                    if player_gold[0] - 250 >= 0:
+                    if player_gold[0] - 250 >= 0:    # checks if the player have enough gold
                         player_gold[0] -= 250
                         global weapon
-                        weapon = 2
+                        weapon = 2     # changes the variable for the weapon, and the player's damage is increased
                         purchasesound.play()
 
                     else:
@@ -537,8 +537,8 @@ def shop3():  # vest
                     if player_gold[0] - 250 >= 0:
                         player_gold[0] -= 250
                         global weapon
-                        weapon = 3
-                        player.health += 10
+                        weapon = 3      # changes the variable for weapon   
+                        player.health += 10     # gives player 10 extra health
                         purchasesound.play()
                     else:
                         message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")
@@ -602,16 +602,16 @@ def shop4():  # ammo
                     bsound.play()
                     shop()
                 elif buy.isOver(pos):
-                    if player_gold[0] - 50 >= 0:
+                    if player_gold[0] - 50 >= 0:    # checks if the player have enough coins(50)
                         player_gold[0] -= 50
                         global weapon
                         if weapon == 1:
-                            global ammoleft
-                            stock[0] += ammoleft
+                            global ammoleft     # if the player bought AK47 already, merge all ammo together(x/y -----> x+y/0)
+                            stock[0] += ammoleft  
                             stock[0] += 50
                             ammoleft = 0
                         else:
-                            ammoleft += 50
+                            ammoleft += 50      # gives the player 50 extra stock ammo
                             weapon = 11
 
                         purchasesound.play()
@@ -668,7 +668,7 @@ def shop5():
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:     # allows the player to browse other weapons in the shop
                 if greyButton3.isOver(pos):
                     bsound.play()
                     shop()
@@ -690,7 +690,7 @@ def shop5():
                 else:
                     pass
 
-            if event.type == pygame.MOUSEMOTION:
+            if event.type == pygame.MOUSEMOTION:    # changes the colours of the buttons if the mouse is over them
                 if greyButton3.isOver(pos):
                     greyButton3.color = green
                 elif buy.isOver(pos):
