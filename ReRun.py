@@ -11,8 +11,8 @@ import pygame
 import time  # Imported to pause the game before exiting
 from math import atan2, sin, cos  # Imported to calculate bullet to player angles
 
-weapon = 0     # sets a variable for weapon which will change when the player purchases different weapons
-ammoleft = 96   # number of ammo the player has at the start of the game
+weapon = 0
+ammoleft = 96
 able = True
 pygame.init()  # Initialize all imported Pygame modules
 pygame.mixer.init()
@@ -25,13 +25,13 @@ green = (0, 255, 0)
 grey = (210, 210, 210)
 
 # Defining sounds
-bsound = pygame.mixer.Sound("Music/Button1.wav")
-selfdmg = pygame.mixer.Sound("Music/selfdmg.wav")
-reloadsound = pygame.mixer.Sound("Music/reload.wav")
-gunsound = pygame.mixer.Sound("Music/gunsound.wav")
-purchasesound = pygame.mixer.Sound("Music/purchasesound.wav")
-nocoinsound = pygame.mixer.Sound("Music/nocoinsound.wav")
-shopselect = pygame.mixer.Sound("Music/shopselect.wav")
+bsound = pygame.mixer.Sound("Music/Button1.wav")  # Button sound
+selfdmg = pygame.mixer.Sound("Music/selfdmg.wav")  # Sound when hit
+reloadsound = pygame.mixer.Sound("Music/reload.wav")  # Sound for reloading
+gunsound = pygame.mixer.Sound("Music/gunsound.wav")  # Sound for gun shot
+purchasesound = pygame.mixer.Sound("Music/purchasesound.wav")  # Sound for purchased item
+nocoinsound = pygame.mixer.Sound("Music/nocoinsound.wav")  # Sound that plays when you can't buy and item
+shopselect = pygame.mixer.Sound("Music/shopselect.wav")  # Button when changing items in the shop
 
 # defining different fonts which will be used in a function that allows us to display text in our game
 smallfont = pygame.font.SysFont("comicsansms", 25)  # Small Comic Sans font
@@ -66,14 +66,14 @@ def message_to_screen(msg, color, x, y, size):  # Used to show text on the scree
     win.blit(textsurf, textrect)
 
 
-# Shop images: load different images for different scenes in the Shop
-start = pygame.image.load('EnvImages/start.png')
-info = pygame.image.load('EnvImages/info.png')
-ak47 = pygame.image.load("EnvImages/AK47.png")
-ammo = pygame.image.load("EnvImages/Ammo.png")
-sniper = pygame.image.load('EnvImages/Sniper.png')
-vest = pygame.image.load('EnvImages/Vest.png')
-locked = pygame.image.load('EnvImages/Locked.png')
+# Shop images
+start = pygame.image.load('EnvImages/start.png')  # Starting image of the game
+info = pygame.image.load('EnvImages/info.png')  # Image showing game instructions
+ak47 = pygame.image.load("EnvImages/AK47.png")  # AK47 image in the shop
+ammo = pygame.image.load("EnvImages/Ammo.png")  # Ammo image in the shop
+sniper = pygame.image.load('EnvImages/Sniper.png')  # Sniper image in the shop
+vest = pygame.image.load('EnvImages/Vest.png')  # Vest image in the shop
+locked = pygame.image.load('EnvImages/Locked.png')  # Locked item image in the shop
 
 
 # Loading story animation
@@ -88,9 +88,13 @@ while story_frame_number <= 25:
 # Loading intro animation
 intro_frame_number = 0
 intro_frames = []
+
+# Loop that loads each frame of the animation
 while intro_frame_number <= 359:
     pygame.event.pump()
     intro_frame_number += 1
+
+    # Changing image loading name as the frame number increases
     if intro_frame_number < 10:
         intro_frames.append(pygame.image.load("IntroGifs/frame_00" + str(intro_frame_number) + "_delay-0.04s.gif"))
     elif intro_frame_number < 100:
@@ -105,6 +109,8 @@ outro_frames = []
 while outro_frame_number <= 53:
     pygame.event.pump()
     outro_frame_number += 1
+
+    # Changing image loading name as the frame number increases
     if outro_frame_number < 10:
         outro_frames.append(pygame.image.load("OutroGifs/frame_0" + str(outro_frame_number) + "_delay-0.04s.gif"))
     elif outro_frame_number < 100:
@@ -116,29 +122,29 @@ while outro_frame_number <= 53:
 # Game over screen
 def gameOver():
     GameOver = pygame.image.load("EnvImages/gameover.png")
-    pygame.event.pump()
-    win.blit(GameOver, (0, 0))
-    pygame.display.update()
-    time.sleep(5)
-    pygame.quit()
+    pygame.event.pump()  # To avoid game crash
+    win.blit(GameOver, (0, 0))  # Game over screen image
+    pygame.display.update()  # Update screen so user can see the image
+    time.sleep(5)  # Wait 5 seconds
+    pygame.quit()  # Close game
 
 
 # Game intro screens
 def game_intro():
-    startbuttons()
-    infobutton()
-    pygame.display.update()
+    startbuttons()  # Button to start game
+    infobutton()  # Button to see game instructions
+    pygame.display.update()  # Update screen
 
 
 # Defining a button
 class button():
     def __init__(self, color, x, y, width, height, text=''):
         self.color = color
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.text = text
+        self.x = x  # Button x pos
+        self.y = y  # Button y pos
+        self.width = width  # Button width
+        self.height = height  # Button height
+        self.text = text  # Text in button
 
     def draw(self, win, outline=None):
         # Call this method to draw the button on the screen
@@ -184,83 +190,83 @@ def shopBut():
 
 # Buttons to buy all of the 5 items
 def shopak47():
-    win.blit(ak47, (0, 0))
-    greyButton3.draw(win, black)   
-    buy.draw(win, black)
-    sniperbut.draw(win, black)    # buttons that allow players to check different weapons
-    vestbut.draw(win, black)
-    ammobut.draw(win, black)
+    win.blit(ak47, (0, 0))  # Ak47 image on screen
+    greyButton3.draw(win, black)
+    buy.draw(win, black)  # Button to buy the item
+    sniperbut.draw(win, black)  # Button to select sniper
+    vestbut.draw(win, black)  # Button to select vest
+    ammobut.draw(win, black)  # Button to select ammo
     lockedbut.draw(win, black)
-    message_to_screen("Coins: " + str(player_gold[0]), white, 130, 75, "small")   # lets the player know how much coins/bullets they have
-    message_to_screen("Bullets left: " + str(stock[0]) + "/" + str(ammoleft), white, 1050, 75, "small")
-    pygame.display.update()
+    message_to_screen("Coins: " + str(player_gold[0]), white, 130, 75, "small")  # Coins left
+    message_to_screen("Bullets left: " + str(stock[0]) + "/" + str(ammoleft), white, 1050, 75, "small")  # Bullets left
+    pygame.display.update()  # Update screen
 
 
 def shopsniper():
-    win.blit(sniper, (0, 0))
+    win.blit(sniper, (0, 0))  # Sniper image on the screen
     greyButton3.draw(win, black)
-    buy.draw(win, black)
-    ak47but.draw(win, black)
-    vestbut.draw(win, black)
-    ammobut.draw(win, black)
+    buy.draw(win, black)  # Buy button
+    ak47but.draw(win, black)  # Button to select ak47
+    vestbut.draw(win, black)  # Button to select vest
+    ammobut.draw(win, black)  # Button to select ammo
     lockedbut.draw(win, black)
-    message_to_screen("Coins: " + str(player_gold[0]), white, 130, 75, "small")
-    message_to_screen("Bullets left: " + str(stock[0]) + "/" + str(ammoleft), white, 1050, 75, "small")
+    message_to_screen("Coins: " + str(player_gold[0]), white, 130, 75, "small")  # Coins left
+    message_to_screen("Bullets left: " + str(stock[0]) + "/" + str(ammoleft), white, 1050, 75, "small")  # Bullets left
     pygame.display.update()
 
 
 def shopvest():
-    win.blit(vest, (0, 0))
+    win.blit(vest, (0, 0))  # Vest image on the screen
     greyButton3.draw(win, black)
-    buy.draw(win, black)
-    ak47but.draw(win, black)
-    sniperbut.draw(win, black)
-    ammobut.draw(win, black)
-    lockedbut.draw(win, black)
-    message_to_screen("Coins: " + str(player_gold[0]), white, 130, 75, "small")
-    message_to_screen("Bullets left: " + str(stock[0]) + "/" + str(ammoleft), white, 1050, 75, "small")
+    buy.draw(win, black)  # Buy button
+    ak47but.draw(win, black)  # Button to select ak47
+    sniperbut.draw(win, black)  # Button to select sniper
+    ammobut.draw(win, black)  # Button to select ammo
+    lockedbut.draw(win, black)  # Button to select locked item
+    message_to_screen("Coins: " + str(player_gold[0]), white, 130, 75, "small")  # Coins left
+    message_to_screen("Bullets left: " + str(stock[0]) + "/" + str(ammoleft), white, 1050, 75, "small")  # Bullets left
     pygame.display.update()
 
 
 def shopammo():
-    win.blit(ammo, (0, 0))
+    win.blit(ammo, (0, 0))  # Ammo image on the screen
     greyButton3.draw(win, black)
-    buy.draw(win, black)
-    ak47but.draw(win, black)
-    vestbut.draw(win, black)
-    sniperbut.draw(win, black)
-    lockedbut.draw(win, black)
-    message_to_screen("Coins: " + str(player_gold[0]), white, 130, 75, "small")
-    message_to_screen("Bullets left: " + str(stock[0]) + "/" + str(ammoleft), white, 1050, 75, "small")
+    buy.draw(win, black)  # Buy button
+    ak47but.draw(win, black)  # Button to select ak47
+    vestbut.draw(win, black)  # Button to select vest
+    sniperbut.draw(win, black)  # Button to select sniper
+    lockedbut.draw(win, black)  # Button to select locked item
+    message_to_screen("Coins: " + str(player_gold[0]), white, 130, 75, "small")  # Coins left
+    message_to_screen("Bullets left: " + str(stock[0]) + "/" + str(ammoleft), white, 1050, 75, "small")  # Bullets left
     pygame.display.update()
 
 
 def shoplocked():
     win.blit(locked, (0, 0))
     greyButton3.draw(win, black)
-    buy.draw(win, black)
-    ak47but.draw(win, black)
-    vestbut.draw(win, black)
-    ammobut.draw(win, black)
-    sniperbut.draw(win, black)
-    message_to_screen("Coins: " + str(player_gold[0]), white, 130, 75, "small")
-    message_to_screen("Bullets left: " + str(stock[0]) + "/" + str(ammoleft), white, 1050, 75, "small")
+    buy.draw(win, black)  # Buy button
+    ak47but.draw(win, black)  # Button to select ak47
+    vestbut.draw(win, black)  # Button to select vest
+    ammobut.draw(win, black)  # Button to select ammo
+    sniperbut.draw(win, black)  # Button to select sniper
+    message_to_screen("Coins: " + str(player_gold[0]), white, 130, 75, "small")  # Coins left
+    message_to_screen("Bullets left: " + str(stock[0]) + "/" + str(ammoleft), white, 1050, 75, "small")  # Bullets left
     pygame.display.update()
 
 
-# Defining where all of the buttons in the shop are (positions)
+# Defining where all of the buttons in the shop are (positions) using the buttons class
 run = True
-greyButton1 = button(grey, 116, 416, 250, 100, 'Start')
-greyButton2 = button(grey, 738, 418, 250, 100, 'Info')
-greyButton3 = button(grey, 0, 500, 250, 100, 'Back')  # back botton
-shopButton1 = button(grey, 950, 0, 250, 100, 'Shop')
-shopButton2 = button(grey, 950, 500, 250, 100, 'Exit')
-ak47but = button(grey, 875, 202, 320, 75, 'AK47')
-sniperbut = button(grey, 875, 282, 320, 75, 'SNIPER')
-vestbut = button(grey, 875, 362, 320, 75, 'VEST')
-ammobut = button(grey, 875, 442, 320, 75, 'AMMO')
-lockedbut = button(grey, 875, 522, 320, 74, 'LOCKED')
-buy = button(grey, 475, 500, 250, 100, 'BUY')
+greyButton1 = button(grey, 116, 416, 250, 100, 'Start')  # Start game button
+greyButton2 = button(grey, 738, 418, 250, 100, 'Info')  # Info button (instructions)
+greyButton3 = button(grey, 0, 500, 250, 100, 'Back')  # Back button
+shopButton1 = button(grey, 950, 0, 250, 100, 'Shop')  # Open shop button on the corrupt guard screen
+shopButton2 = button(grey, 950, 500, 250, 100, 'Exit')  # Exit shop button
+ak47but = button(grey, 875, 202, 320, 75, 'AK47')  # Button to select ak487
+sniperbut = button(grey, 875, 282, 320, 75, 'SNIPER')  # Button to select sniper
+vestbut = button(grey, 875, 362, 320, 75, 'VEST')  # Button to select vest
+ammobut = button(grey, 875, 442, 320, 75, 'AMMO')  # Button to select ammo
+lockedbut = button(grey, 875, 522, 320, 74, 'LOCKED')  # Button to select locked item
+buy = button(grey, 475, 500, 250, 100, 'BUY')  # Button to buy an item
 
 
 # the starting page for the game
@@ -314,7 +320,7 @@ def infobutton():
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:    
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 if greyButton3.isOver(pos):
                     bsound.play()
                     startbuttons()    # if the player clicks "back" it brings them back to te starting menu
@@ -341,7 +347,7 @@ def shop():
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN: 
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 if shopButton1.isOver(pos):
                     bsound.play()
                     shop1()
@@ -364,7 +370,7 @@ def shop():
             if event.type == pygame.MOUSEMOTION:  # make the buttons change to a different colour when the mouse is over them
                 if shopButton1.isOver(pos):
                     shopButton1.color = green
-                elif shopButton2.isOver(pos): 
+                elif shopButton2.isOver(pos):
                     shopButton2.color = red
 
                 else:
@@ -537,7 +543,7 @@ def shop3():  # vest
                     if player_gold[0] - 250 >= 0:
                         player_gold[0] -= 250
                         global weapon
-                        weapon = 3      # changes the variable for weapon   
+                        weapon = 3      # changes the variable for weapon
                         player.health += 10     # gives player 10 extra health
                         purchasesound.play()
                     else:
@@ -607,7 +613,7 @@ def shop4():  # ammo
                         global weapon
                         if weapon == 1:
                             global ammoleft     # if the player bought AK47 already, merge all ammo together(x/y -----> x+y/0)
-                            stock[0] += ammoleft  
+                            stock[0] += ammoleft
                             stock[0] += 50
                             ammoleft = 0
                         else:
