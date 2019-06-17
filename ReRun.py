@@ -381,22 +381,22 @@ def shop():
 def shop1():  # ak47
     global run
     while run:
-        shopak47()
+        shopak47()       # allows the player to see what AK47 does
         pygame.display.update()
 
-        for event in pygame.event.get():
-            pos = pygame.mouse.get_pos()
+        for event in pygame.event.get():     # detects different event types
+            pos = pygame.mouse.get_pos()     # detects the position of the mouse
 
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:   # if the event type is click buttons
                 if greyButton3.isOver(pos):
-                    bsound.play()
+                    bsound.play()   # plays the sound
                     shop()
-                elif buy.isOver(pos):
+                elif buy.isOver(pos):     # checks if the mouse clicks the "buy" button
                     global ammoleft
                     global weapon
                     if player_gold[0] - 250 >= 0:   # checks if the player has enough money to buy the weapon
@@ -411,7 +411,7 @@ def shop1():  # ak47
                             player_gold[0] -= 250
                             weapon = 1
                     else:
-                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")  # informs the player if they don't have enought coins
+                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")  # informs the player if they don't have enough coins
                         pygame.display.update()
                         nocoinsound.play()
                         time.sleep(1)
@@ -456,22 +456,22 @@ def shop1():  # ak47
 def shop2():  # sniper
     global run
     while run:
-        shopsniper()
+        shopsniper() # lets the player to see what the Sniper does
         pygame.display.update()
 
-        for event in pygame.event.get():
-            pos = pygame.mouse.get_pos()
+        for event in pygame.event.get():     # detects different event types
+            pos = pygame.mouse.get_pos()     # detects the position of the mouse
 
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:   # if the event type is click buttons
                 if greyButton3.isOver(pos):
-                    bsound.play()
+                    bsound.play()    # plays the sound
                     shop()
-                elif buy.isOver(pos):
+                elif buy.isOver(pos):             # checks if the mouse clicks the "buy" button
                     if player_gold[0] - 250 >= 0:    # checks if the player have enough gold
                         player_gold[0] -= 250
                         global weapon
@@ -479,12 +479,12 @@ def shop2():  # sniper
                         purchasesound.play()
 
                     else:
-                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")
+                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium") # informs the player if they don't have enough coins
                         pygame.display.update()
                         time.sleep(1)
                         pygame.display.update()
                         nocoinsound.play()
-                elif ak47but.isOver(pos):
+                elif ak47but.isOver(pos):   # allows the player to click on other buttons to see the rest of weapons
                     shop1()
                     shopselect.play()
                 elif vestbut.isOver(pos):
@@ -499,7 +499,7 @@ def shop2():  # sniper
                 else:
                     pass
 
-            if event.type == pygame.MOUSEMOTION:
+            if event.type == pygame.MOUSEMOTION:   # changes the colour of the buttons if the mouse is over them
                 if greyButton3.isOver(pos):
                     greyButton3.color = green
                 elif buy.isOver(pos):
@@ -524,20 +524,20 @@ def shop2():  # sniper
 def shop3():  # vest
     global run
     while run:
-        shopvest()
+        shopvest()  # lets the player see what the vest does
         pygame.display.update()
 
-        for event in pygame.event.get():
-            pos = pygame.mouse.get_pos()
+        for event in pygame.event.get():   # checks for different event types
+            pos = pygame.mouse.get_pos()   # checks where the mouse is
 
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:  # if even type is clicking buttons
                 if greyButton3.isOver(pos):
-                    bsound.play()
+                    bsound.play()  # plays sound
                     shop()
                 elif buy.isOver(pos):
                     if player_gold[0] - 250 >= 0:
@@ -547,12 +547,12 @@ def shop3():  # vest
                         player.health += 10     # gives player 10 extra health
                         purchasesound.play()
                     else:
-                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")
+                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium") # tells the player they don't have enough coins
                         pygame.display.update()
                         time.sleep(1)
                         pygame.display.update()
                         nocoinsound.play()
-                elif ak47but.isOver(pos):
+                elif ak47but.isOver(pos):     # allows the players to check other weapons in the shop
                     shop1()
                     shopselect.play()
                 elif sniperbut.isOver(pos):
@@ -567,7 +567,7 @@ def shop3():  # vest
                 else:
                     pass
 
-            if event.type == pygame.MOUSEMOTION:
+            if event.type == pygame.MOUSEMOTION:   # changes the colours of the buttons if the mouse is over them
                 if greyButton3.isOver(pos):
                     greyButton3.color = green
                 elif buy.isOver(pos):
@@ -595,8 +595,8 @@ def shop4():  # ammo
         shopammo()
         pygame.display.update()
 
-        for event in pygame.event.get():
-            pos = pygame.mouse.get_pos()
+        for event in pygame.event.get():   # checks for different event types
+            pos = pygame.mouse.get_pos()   # checks where the mouse is
 
             if event.type == pygame.QUIT:
                 run = False
@@ -605,7 +605,7 @@ def shop4():  # ammo
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if greyButton3.isOver(pos):
-                    bsound.play()
+                    bsound.play()   # plays the sound
                     shop()
                 elif buy.isOver(pos):
                     if player_gold[0] - 50 >= 0:    # checks if the player have enough coins(50)
@@ -622,12 +622,12 @@ def shop4():  # ammo
 
                         purchasesound.play()
                     else:
-                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium")
+                        message_to_screen("NOT ENOUGH COINS", red, 600, 300, "medium") # tells the player they don't have enough coins
                         pygame.display.update()
                         time.sleep(1)
                         pygame.display.update()
                         nocoinsound.play()
-                elif ak47but.isOver(pos):
+                elif ak47but.isOver(pos):  # allows the players to browse other weapons in the sh
                     shop1()
                 elif sniperbut.isOver(pos):
                     shop2()
@@ -638,7 +638,7 @@ def shop4():  # ammo
                 else:
                     pass
 
-            if event.type == pygame.MOUSEMOTION:
+            if event.type == pygame.MOUSEMOTION:  # changes the colours of the buttons if the mouse is over them
                 if greyButton3.isOver(pos):
                     greyButton3.color = green
                 elif buy.isOver(pos):
@@ -665,9 +665,9 @@ def shop5():
     while run:
         shoplocked()
         pygame.display.update()
-
-        for event in pygame.event.get():
-            pos = pygame.mouse.get_pos()
+ 
+        for event in pygame.event.get():   # checks for different event types
+            pos = pygame.mouse.get_pos()   # checks where the mouse is
 
             if event.type == pygame.QUIT:
                 run = False
